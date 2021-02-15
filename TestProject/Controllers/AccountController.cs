@@ -10,7 +10,8 @@ using TestProject.BL.Models;
 
 namespace TestProject.Controllers
 {
-    [AllowAnonymous, Route("account")]
+    [Authorize]    
+    [Route("account")]
     public class AccountController : Controller
     {
         private IUserService _userService;
@@ -19,6 +20,7 @@ namespace TestProject.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [Route("google-login")]
         public IActionResult GoogleLogin()
         {
@@ -41,9 +43,16 @@ namespace TestProject.Controllers
                 LastName = claims.FirstOrDefault(claim => claim.Type.Contains("surname")).Value,
                 Email = claims.FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value
             };
-            user = await _userService.AddUserAsync(user);
+            user = await _userService.AddOrUpdateUserAsync(user);
 
-            return Json(user);
+            return Redirect("/");
+        }
+
+        [Route("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Redirect("/");
         }
     }
 }

@@ -5,6 +5,7 @@ namespace TestProject.BL.Services
 {
     public interface IUserService
     {
-        Task<UserLoginModel> AddUserAsync(UserLoginModel userLoginModel);
+        Task<UserLoginModel> AddOrUpdateUserAsync(UserLoginModel userLoginModel);
+        UserProfile GetUserProfile(string email);
     }
 }

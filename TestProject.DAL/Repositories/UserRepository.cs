@@ -25,5 +25,15 @@ namespace TestProject.DAL.Repositories
         {
             return _context.Users.Any(u => u.Email == email);
         }
+
+        public User GetUser(string email)
+        {
+            return _context.Users.FirstOrDefault(u => u.Email == email);
+        }
+
+        public void Update(User user)
+        {
+             _context.Users.Update(user);
+        }
     }
 }

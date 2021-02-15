@@ -18,10 +18,14 @@ namespace TestProject
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; private set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            Configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile("googleAuth.json")
+            .Build();
 
             services.AddControllersWithViews();
 
@@ -37,14 +41,11 @@ namespace TestProject
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/account/google-login";
-                })
+                .AddCookie()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "192402769751-5m4d3f8mr59osebclah7qek6lrjq759a.apps.googleusercontent.com";
-                    options.ClientSecret = "hIJ4ytRYpx3nm6-s7sEjpCbL";
+                    options.ClientId = Configuration.GetSection("ClientId").Value;
+                    options.ClientSecret = Configuration.GetSection("ClientSecret").Value;
                 });
         }
 

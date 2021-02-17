@@ -9,5 +9,10 @@ namespace TestProject.DAL.Contexts
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email).IsUnique();
+        }
     }
 }

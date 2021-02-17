@@ -25,5 +25,16 @@ namespace TestProject.DAL.Repositories
         {
             return _context.Users.Any(u => u.Email == email);
         }
+
+        public User GetUser(string email)
+        {
+            return _context.Users.Single(u => u.Email == email);
+        }
+
+        public async Task UpdateAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

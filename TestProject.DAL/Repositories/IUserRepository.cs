@@ -5,5 +5,6 @@ namespace TestProject.DAL.Repositories
     public interface IUserRepository : IRepository<User>
     {
         bool UserExists(string email);
+        User GetUser(string email);
     }
 }

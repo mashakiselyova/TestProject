@@ -18,17 +18,13 @@ namespace TestProject.BL.Services
         {
             if (_userRepository.UserExists(userLoginModel.Email))
             {
-                var user = _userRepository.GetUser(userLoginModel.Email);
-                if (UserHasChanged(userLoginModel, user))
-                {
-                    await UpdateAsync(userLoginModel, user);
-                }
+                await UpdateAsync(userLoginModel);
             }
             else
             {
                 await Create(userLoginModel);
             }
-        }        
+        }
 
         public UserProfile GetUserProfile(string email)
         {
@@ -47,11 +43,15 @@ namespace TestProject.BL.Services
             await _userRepository.CreateAsync(user);
         }
 
-        private async Task UpdateAsync(UserLoginModel userLoginModel, User user)
+        private async Task UpdateAsync(UserLoginModel userLoginModel)
         {
-            var newUser = UserMapper.MapUserLoginModelToUser(userLoginModel);
-            newUser.Id = user.Id;
-            await _userRepository.UpdateAsync(newUser);
+            var user = _userRepository.GetUser(userLoginModel.Email);
+            if (UserHasChanged(userLoginModel, user))
+            {
+                var newUser = UserMapper.MapUserLoginModelToUser(userLoginModel);
+                newUser.Id = user.Id;
+                await _userRepository.UpdateAsync(newUser);
+            }
         }
     }
 }

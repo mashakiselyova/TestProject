@@ -35,7 +35,7 @@ namespace TestProject
             });
 
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("TestProject")));
 
             services.AddAuthentication(options =>
             {

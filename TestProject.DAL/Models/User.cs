@@ -1,4 +1,6 @@
-﻿namespace TestProject.DAL.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TestProject.DAL.Models
 {
     public class User
     {

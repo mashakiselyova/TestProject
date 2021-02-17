@@ -8,42 +8,50 @@ namespace TestProject.BL.Services
 {
     public class UserService : IUserService
     {
-        private IUserRepository _userRepo;
+        private IUserRepository _userRepository;
 
-        public UserService(IUserRepository repo)
+        public UserService(IUserRepository repository)
         {
-            _userRepo = repo;
+            _userRepository = repository;
         }
-        public async Task<UserLoginModel> AddOrUpdateUserAsync(UserLoginModel userLoginModel)
+        public async Task AddOrUpdateUserAsync(UserLoginModel userLoginModel)
         {
-            if (_userRepo.UserExists(userLoginModel.Email))
+            if (_userRepository.UserExists(userLoginModel.Email))
             {
-                var user = _userRepo.GetUser(userLoginModel.Email);
-                var userChanged = CheckUserForChanges(userLoginModel, user);
-                if (userChanged)
+                var user = _userRepository.GetUser(userLoginModel.Email);
+                if (UserHasChanged(userLoginModel, user))
                 {
-                    var newUser = UserMapper.MapUserLoginModelToUser(userLoginModel);
-                    newUser.Id = user.Id;
-                    _userRepo.Update(newUser);
+                    await UpdateAsync(userLoginModel, user);
                 }
             }
             else
             {
-                var user = UserMapper.MapUserLoginModelToUser(userLoginModel);
-                await _userRepo.CreateAsync(user);
+                await Create(userLoginModel);
             }
-            return userLoginModel;
-        }
+        }        
 
         public UserProfile GetUserProfile(string email)
         {
-            var user = _userRepo.GetUser(email);
+            var user = _userRepository.GetUser(email);
             return UserMapper.MapUserToUserProfile(user);
         }
         
-        private bool CheckUserForChanges(UserLoginModel userLoginModel, User user)
+        private bool UserHasChanged(UserLoginModel userLoginModel, User user)
         {
             return !(userLoginModel.FirstName == user.FirstName && userLoginModel.LastName == user.LastName);
+        }
+
+        private async Task Create(UserLoginModel userLoginModel)
+        {
+            var user = UserMapper.MapUserLoginModelToUser(userLoginModel);
+            await _userRepository.CreateAsync(user);
+        }
+
+        private async Task UpdateAsync(UserLoginModel userLoginModel, User user)
+        {
+            var newUser = UserMapper.MapUserLoginModelToUser(userLoginModel);
+            newUser.Id = user.Id;
+            await _userRepository.UpdateAsync(newUser);
         }
     }
 }

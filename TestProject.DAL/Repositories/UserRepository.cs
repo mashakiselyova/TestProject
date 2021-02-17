@@ -28,12 +28,13 @@ namespace TestProject.DAL.Repositories
 
         public User GetUser(string email)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
+            return _context.Users.Single(u => u.Email == email);
         }
 
-        public void Update(User user)
+        public async Task UpdateAsync(User user)
         {
-             _context.Users.Update(user);
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
         }
     }
 }

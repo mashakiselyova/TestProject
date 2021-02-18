@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import Main from "./Main"
 import UserProfile from "./UserProfile"
 import Header from "./Header";
+import PostEditor from "./PostEditor";
 
 function Layout() {
     const [userProfile, setUserProfile] = useState({
@@ -31,8 +32,9 @@ function Layout() {
     return <div>
         <Header userLoggedIn={userLoggedIn} name={userProfile.firstName + ' ' + userProfile.lastName} />
         <div>
-            <Route exact path="/" render={() => <Main />} />
+            <Route exact path="/" render={() => <Main userLoggedIn={userLoggedIn} />} />
             <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
+            <Route exact path="/posts/create" render={() => <PostEditor />} />
         </div>        
     </div>;
 }

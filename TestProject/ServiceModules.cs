@@ -11,6 +11,8 @@ namespace TestProject
             base.Load(builder);
             builder.RegisterType<UserRepository>().As<IUserRepository>();
             builder.RegisterType<UserService>().As<IUserService>();
+            builder.RegisterType<PostService>().As<IPostService>();
+            builder.RegisterType<PostRepository>().As<IPostRepository>();
         }
     }
 }

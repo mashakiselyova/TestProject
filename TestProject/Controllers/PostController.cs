@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Security.Claims;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
 using TestProject.Filters;

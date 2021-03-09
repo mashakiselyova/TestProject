@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
 
 namespace TestProject.DAL.Models
 {
@@ -8,5 +8,6 @@ namespace TestProject.DAL.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public List<Rating> Ratings { get; set; }
     }
 }

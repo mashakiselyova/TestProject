@@ -29,6 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210309113235_AddRatingsTable.cs" />
+    <Compile Remove="Migrations\20210309113235_AddRatingsTable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TestProject.BL\TestProject.BL.csproj" />
     <ProjectReference Include="..\TestProject.DAL\TestProject.DAL.csproj" />
   </ItemGroup>

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Security.Claims;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
+using TestProject.Filters;
+using TestProject.Utils;
 
 namespace TestProject.Controllers
 {
@@ -18,17 +20,12 @@ namespace TestProject.Controllers
 
         [HttpPost]
         [Route("createPost")]
+        [CustomAuthorizationFilter]
         public IActionResult Create([FromBody]PostEditorModel post)
         {
-            _postService.Create(post, GetUserEmail());
+            _postService.Create(post, UserHelper.GetUserEmail(User));
 
             return new StatusCodeResult(201);
-        }
-
-        private string GetUserEmail()
-        {
-            return (User.Identity as ClaimsIdentity).Claims
-                    .FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value;
         }
     }
 }

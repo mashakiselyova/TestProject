@@ -6,15 +6,15 @@ namespace TestProject.BL.Mappers
 {
     public static class PostMapper
     {
-        public static Post MapPostEditorModelToPost(PostEditorModel postEditorModel, int userId)
+        public static Post MapPostEditorModelToPost(PostEditorModel postEditorModel, int userId, 
+            DateTime createDate, DateTime updateDate)
         {
             return new Post
             {
                 Title = postEditorModel.Title,
                 Content = postEditorModel.Content,
-                CreateDate = DateTime.Now,
-                UpdateDate = DateTime.Now,
-                Rating = 0,
+                CreateDate = createDate,
+                UpdateDate = updateDate,
                 UserId = userId
             };
         }

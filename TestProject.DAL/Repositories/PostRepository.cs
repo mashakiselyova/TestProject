@@ -18,6 +18,7 @@ namespace TestProject.DAL.Repositories
         {
             await _context.Posts.AddAsync(post);
             await _context.SaveChangesAsync();
+
         }
 
         public Task UpdateAsync(Post post)

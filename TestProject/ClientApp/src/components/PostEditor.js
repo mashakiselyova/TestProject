@@ -33,14 +33,14 @@ function PostEditor() {
         <div onSubmit={handleSubmit}>
             <form>
                 <div className="form-group">
-                    <label>Название</label>
+                    <label>Title</label>
                     <input type="text" className="form-control" value={title} onChange={onTitleChange} />
                 </div>
                 <div className="form-group">
-                    <label>Текст</label>
+                    <label>Text</label>
                     <textarea rows="5" className="form-control" value={content} onChange={onContentChange} />
                 </div>
-                <input type="submit" className="btn btn-primary" value="Отправить" />
+                <input type="submit" className="btn btn-primary" value="Create" />
             </form>
         </div>
     );

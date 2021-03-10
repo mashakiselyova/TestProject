@@ -1,8 +1,10 @@
 ﻿import React from 'react';
 
-function Main() {
+function Main(props) {
     return <div>
-        Posts will be here
+        {props.userLoggedIn
+            ? <a href="/posts/create" className="btn btn-primary mt-1">New Post</a>
+            : <p>You need to sign in to create new posts</p>}        
     </div>;
 }
 

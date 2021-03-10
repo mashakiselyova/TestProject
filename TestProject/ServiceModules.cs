@@ -9,8 +9,20 @@ namespace TestProject
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<UserRepository>().As<IUserRepository>();
+            RegisterRepositories(builder);
+            RegisterServices(builder);
+        }
+
+        private static void RegisterServices(ContainerBuilder builder)
+        {
             builder.RegisterType<UserService>().As<IUserService>();
+            builder.RegisterType<PostService>().As<IPostService>();
+        }
+
+        private static void RegisterRepositories(ContainerBuilder builder)
+        {
+            builder.RegisterType<UserRepository>().As<IUserRepository>();
+            builder.RegisterType<PostRepository>().As<IPostRepository>();
         }
     }
 }

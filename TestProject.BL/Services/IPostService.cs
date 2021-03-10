@@ -8,6 +8,6 @@ namespace TestProject.BL.Services
     public interface IPostService
     {
         Task Create(PostEditorModel postEditorModel, string userEmail);
-        List<Post> GetAllPosts();
+        Task<List<PostDisplayModel>> GetAllPostsAsync();
     }
 }

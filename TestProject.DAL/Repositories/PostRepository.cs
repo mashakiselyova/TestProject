@@ -23,10 +23,10 @@ namespace TestProject.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public List<Post> GetAllPosts()
+        public async Task<List<Post>> GetAllPostsAsync()
         {
-            return _context.Posts.Include(p => p.User)
-                .OrderByDescending(p => p.CreateDate).ToList();
+            return await _context.Posts.Include(p => p.User)
+                .OrderByDescending(p => p.CreateDate).ToListAsync();
         }
 
         public Task UpdateAsync(Post post)

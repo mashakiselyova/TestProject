@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
-using TestProject.DAL.Models;
 using TestProject.Filters;
 using TestProject.Utils;
 
@@ -29,9 +29,9 @@ namespace TestProject.Controllers
         }
 
         [Route("getAllPosts")]
-        public List<Post> GetAllPosts()
+        public async Task<List<PostDisplayModel>> GetAllPostsAsync()
         {
-            return _postService.GetAllPosts();
+            return await _postService.GetAllPostsAsync();
         }
     }
 }

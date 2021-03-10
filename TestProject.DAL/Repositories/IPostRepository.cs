@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TestProject.DAL.Models;
 
 namespace TestProject.DAL.Repositories
 {
     public interface IPostRepository : IRepository<Post>
     {
-        List<Post> GetAllPosts();
+        Task<List<Post>> GetAllPostsAsync();
     }
 }

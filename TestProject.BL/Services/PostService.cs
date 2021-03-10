@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
-using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
 
 namespace TestProject.BL.Services
@@ -22,16 +22,18 @@ namespace TestProject.BL.Services
         public async Task Create(PostEditorModel postEditorModel, string userEmail)
         {
             var post = PostMapper.MapPostEditorModelToPost(postEditorModel);
-            var user = _userRepository.GetUser(userEmail);
+            var user = await _userRepository.GetUserAsync(userEmail);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
             post.UpdateDate = DateTime.Now;
             await _postRepository.CreateAsync(post);
         }
 
-        public List<Post> GetAllPosts()
+        public async Task<List<PostDisplayModel>> GetAllPostsAsync()
         {
-            return _postRepository.GetAllPosts();
+            var posts = await _postRepository.GetAllPostsAsync();
+            var postDisplayModels = posts.Select(p => PostMapper.MapPostToPostDisplayModel(p)).ToList();
+            return postDisplayModels;
         }
     }
 }

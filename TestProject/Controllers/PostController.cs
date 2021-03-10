@@ -21,7 +21,7 @@ namespace TestProject.Controllers
         [CustomAuthorizationFilter]
         public IActionResult Create([FromBody]PostEditorModel post)
         {
-            _postService.Create(post, UserHelper.GetUserEmail(User));
+            _postService.Create(post, User.GetEmail());
 
             return new StatusCodeResult(201);
         }

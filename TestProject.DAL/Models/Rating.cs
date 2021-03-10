@@ -1,4 +1,6 @@
-﻿namespace TestProject.DAL.Models
+﻿using TestProject.DAL.Enums;
+
+namespace TestProject.DAL.Models
 {
     public class Rating
     {
@@ -8,11 +10,5 @@
         public Post Post { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
-    }
-
-    public enum RatingValue
-    {
-        Plus,
-        Minus
-    }
+    }    
 }

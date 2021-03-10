@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
+using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
 
 namespace TestProject.BL.Services
@@ -25,6 +27,11 @@ namespace TestProject.BL.Services
             post.CreateDate = DateTime.Now;
             post.UpdateDate = DateTime.Now;
             await _postRepository.CreateAsync(post);
+        }
+
+        public List<Post> GetAllPosts()
+        {
+            return _postRepository.GetAllPosts();
         }
     }
 }

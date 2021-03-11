@@ -2,7 +2,7 @@
 using TestProject.DAL.Models;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace TestProject.DAL.Repositories
 {
@@ -26,9 +26,9 @@ namespace TestProject.DAL.Repositories
             return _context.Users.Any(u => u.Email == email);
         }
 
-        public User GetUser(string email)
+        public async Task<User> GetUserAsync(string email)
         {
-            return _context.Users.Single(u => u.Email == email);
+            return await _context.Users.SingleAsync(u => u.Email == email);
         }
 
         public async Task UpdateAsync(User user)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
@@ -20,11 +22,18 @@ namespace TestProject.BL.Services
         public async Task Create(PostEditorModel postEditorModel, string userEmail)
         {
             var post = PostMapper.MapPostEditorModelToPost(postEditorModel);
-            var user = _userRepository.GetUser(userEmail);
+            var user = await _userRepository.GetUserAsync(userEmail);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
             post.UpdateDate = DateTime.Now;
             await _postRepository.CreateAsync(post);
+        }
+
+        public async Task<List<PostModel>> GetAllPostsAsync()
+        {
+            var posts = await _postRepository.GetAllPostsAsync();
+            var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
+            return postDisplayModels;
         }
     }
 }

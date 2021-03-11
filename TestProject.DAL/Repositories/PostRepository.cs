@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TestProject.DAL.Contexts;
 using TestProject.DAL.Models;
@@ -18,6 +21,12 @@ namespace TestProject.DAL.Repositories
         {
             await _context.Posts.AddAsync(post);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Post>> GetAllPostsAsync()
+        {
+            return await _context.Posts.Include(p => p.User)
+                .OrderByDescending(p => p.CreateDate).ToListAsync();
         }
 
         public Task UpdateAsync(Post post)

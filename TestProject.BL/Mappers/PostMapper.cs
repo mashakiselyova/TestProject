@@ -13,5 +13,18 @@ namespace TestProject.BL.Mappers
                 Content = postEditorModel.Content
             };
         }
+
+        public static PostModel MapPostToPostModel(Post post)
+        {
+            return new PostModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                CreateDate = post.CreateDate,
+                UpdateDate = post.UpdateDate,
+                Author = post.User
+            };
+        }
     }
 }

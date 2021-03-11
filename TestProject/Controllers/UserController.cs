@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
 using TestProject.Filters;
@@ -18,11 +19,11 @@ namespace TestProject.Controllers
 
         [CustomAuthorizationFilter]
         [Route("getUserProfile")]
-        public UserProfile GetUserProfile()
+        public async Task<UserProfile> GetUserProfileAsync()
         {
             var userEmail = (User.Identity as ClaimsIdentity).Claims
-                .FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value;
-            return _userService.GetUserProfile(userEmail);
+            .FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value;
+            return await _userService.GetUserProfileAsync(userEmail);
         }
     }
 }

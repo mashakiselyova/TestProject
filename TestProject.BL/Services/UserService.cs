@@ -26,9 +26,9 @@ namespace TestProject.BL.Services
             }
         }
 
-        public UserProfile GetUserProfile(string email)
+        public async Task<UserProfile> GetUserProfileAsync(string email)
         {
-            var user = _userRepository.GetUser(email);
+            var user = await _userRepository.GetUserAsync(email);
             return UserMapper.MapUserToUserProfile(user);
         }
         
@@ -45,7 +45,7 @@ namespace TestProject.BL.Services
 
         private async Task UpdateAsync(UserLoginModel userLoginModel)
         {
-            var user = _userRepository.GetUser(userLoginModel.Email);
+            var user = await _userRepository.GetUserAsync(userLoginModel.Email);
             if (UserHasChanged(userLoginModel, user))
             {
                 var newUser = UserMapper.MapUserLoginModelToUser(userLoginModel);

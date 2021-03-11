@@ -29,10 +29,10 @@ namespace TestProject.BL.Services
             await _postRepository.CreateAsync(post);
         }
 
-        public async Task<List<PostDisplayModel>> GetAllPostsAsync()
+        public async Task<List<PostModel>> GetAllPostsAsync()
         {
             var posts = await _postRepository.GetAllPostsAsync();
-            var postDisplayModels = posts.Select(p => PostMapper.MapPostToPostDisplayModel(p)).ToList();
+            var postDisplayModels = posts.Select(p => PostMapper.MapPostToPostModel(p)).ToList();
             return postDisplayModels;
         }
     }

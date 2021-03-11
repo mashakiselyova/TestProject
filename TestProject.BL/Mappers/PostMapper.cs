@@ -14,9 +14,9 @@ namespace TestProject.BL.Mappers
             };
         }
 
-        public static PostDisplayModel MapPostToPostDisplayModel(Post post)
+        public static PostModel MapPostToPostModel(Post post)
         {
-            return new PostDisplayModel
+            return new PostModel
             {
                 Id = post.Id,
                 Title = post.Title,

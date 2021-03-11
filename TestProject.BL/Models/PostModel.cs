@@ -3,7 +3,7 @@ using TestProject.DAL.Models;
 
 namespace TestProject.BL.Models
 {
-    public class PostDisplayModel
+    public class PostModel
     {
         public int Id { get; set; }
         public string Title { get; set; }

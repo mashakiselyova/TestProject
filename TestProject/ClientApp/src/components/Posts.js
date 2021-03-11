@@ -8,9 +8,6 @@ function Posts() {
         fetch("/posts/getAllPosts", { method: 'get', mode: 'no-cors' })
             .then((response) => {
                 response.json().then((data) => {
-                    data.forEach((element) => {
-                        element.createDate = element.createDate.replace('T', ' ').substring(0, 16);
-                    })
                     setPosts(data);
                 });
             });

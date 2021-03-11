@@ -1,7 +1,7 @@
 ﻿using System;
 using TestProject.DAL.Models;
 
-namespace TestProject
+namespace TestProject.Models
 {
     public class PostDisplayModel
     {

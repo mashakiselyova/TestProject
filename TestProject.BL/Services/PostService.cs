@@ -32,7 +32,7 @@ namespace TestProject.BL.Services
         public async Task<List<PostModel>> GetAllPostsAsync()
         {
             var posts = await _postRepository.GetAllPostsAsync();
-            var postDisplayModels = posts.Select(p => PostMapper.MapPostToPostModel(p)).ToList();
+            var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
             return postDisplayModels;
         }
     }

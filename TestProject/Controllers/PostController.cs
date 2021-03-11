@@ -6,6 +6,7 @@ using TestProject.BL.Models;
 using TestProject.BL.Services;
 using TestProject.Filters;
 using TestProject.Mappers;
+using TestProject.Models;
 using TestProject.Utils;
 
 namespace TestProject.Controllers
@@ -34,7 +35,7 @@ namespace TestProject.Controllers
         public async Task<List<PostDisplayModel>> GetAllPostsAsync()
         {
             var posts = await _postService.GetAllPostsAsync();
-            return posts.Select(p => PostMapper.MapPostModelToPostModel(p)).ToList();
+            return posts.Select(PostMapper.MapPostModelToPostModel).ToList();
         }
     }
 }

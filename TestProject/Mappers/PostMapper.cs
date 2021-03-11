@@ -1,4 +1,5 @@
 ﻿using TestProject.BL.Models;
+using TestProject.Models;
 
 namespace TestProject.Mappers
 {

@@ -16,7 +16,7 @@ namespace TestProject.DAL.Repositories
             _context = context;
         }
 
-        public async Task CreateAsync(Post post)
+        public async Task Create(Post post)
         {
             await _context.Posts.AddAsync(post);
             await _context.SaveChangesAsync();
@@ -28,22 +28,30 @@ namespace TestProject.DAL.Repositories
                 .OrderByDescending(p => p.CreateDate).ToListAsync();
         }
 
-        public async Task<Post> GetAsync(int id)
+        public async Task<List<Post>> GetUserPostsAsync(int id)
+        {
+            return await _context.Posts.Where(p => p.UserId == id).Include(p => p.User)
+                .OrderByDescending(p => p.CreateDate).ToListAsync();
+        }
+
+        public async Task<Post> Get(int id)
         {
             return await _context.Posts.FindAsync(id);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task Delete(int id)
         {
-            var post = await GetAsync(id);
+            var post = await Get(id);
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Post post)
+        public async Task Update(Post post)
         {
             _context.Posts.Update(post);
             await _context.SaveChangesAsync();
-        }       
+        }
+
+        
     }
 }

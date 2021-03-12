@@ -1,4 +1,5 @@
 ﻿import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Post({ post, userLoggedIn, userProfile }) {
 
@@ -9,6 +10,8 @@ function Post({ post, userLoggedIn, userProfile }) {
             if (response.status === 200) {
                 window.location.pathname = '/';
             }
+        }).catch(() => {
+            window.alert("Couldn't delete this post");
         });
     }
 
@@ -21,8 +24,9 @@ function Post({ post, userLoggedIn, userProfile }) {
                 <p className="card-text">{post.content}</p>
                 {userLoggedIn && userProfile.id === post.author.id
                     && <div>
-                    <a href={`/posts/edit/${post.id}`} className="btn btn-primary btn-sm m-1">Edit</a>
-                    <button onClick={handleDelete} className="btn btn-danger btn-sm m-1">Delete</button>
+                    <Link to={`/posts/edit/${post.id}`} className="btn btn-primary btn-sm m-1">Edit</Link>
+                    <button onClick={() => { if (window.confirm("Are you sure you want to delete this post?")) handleDelete() }}
+                        className="btn btn-danger btn-sm m-1">Delete</button>
                     </div>}
             </div>
         </div>

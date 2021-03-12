@@ -40,7 +40,7 @@ namespace TestProject.BL.Services
         private async Task Create(UserLoginModel userLoginModel)
         {
             var user = UserMapper.MapUserLoginModelToUser(userLoginModel);
-            await _userRepository.CreateAsync(user);
+            await _userRepository.Create(user);
         }
 
         private async Task UpdateAsync(UserLoginModel userLoginModel)
@@ -50,7 +50,7 @@ namespace TestProject.BL.Services
             {
                 var newUser = UserMapper.MapUserLoginModelToUser(userLoginModel);
                 newUser.Id = user.Id;
-                await _userRepository.UpdateAsync(newUser);
+                await _userRepository.Update(newUser);
             }
         }
     }

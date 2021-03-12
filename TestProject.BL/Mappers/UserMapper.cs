@@ -30,7 +30,7 @@ namespace TestProject.BL.Mappers
             return new UserProfile
             {
                 Id = user.Id,
-                Name = user.FirstName + ' ' + user.LastName,
+                Name = $"{user.FirstName} {user.LastName}",
                 Email = user.Email
             };
         }

@@ -1,11 +1,11 @@
 ﻿import React, { useState, useEffect } from 'react';
 import PostForm from './PostForm';
 
-function EditPostForm({ match }) {
+function EditPostForm({ postId }) {
     const [post, setPost] = useState({ id: '', title: '', content: '' });
 
     useEffect(() => {
-        fetch(`/posts/getPost/${match.params.id}`, { method: 'get', mode: 'no-cors' })
+        fetch(`/posts/getPost/${postId}`, { method: 'get', mode: 'no-cors' })
             .then((response) => {
                 response.json().then((data) => {
                     setPost(data);
@@ -13,18 +13,12 @@ function EditPostForm({ match }) {
             });
     }, [])
 
-    function handleTitleChange(event) {
-        const value = event.target.value;
-        let editedPost = { ...post };
-        editedPost.title = value;
-        setPost(editedPost);
+    function handleTitleChange(value) {
+        setPost({ ...post, title: value });
     };
 
-    function handleContentChange(event) {
-        const value = event.target.value;
-        let editedPost = { ...post };
-        editedPost.content = value;
-        setPost(editedPost);
+    function handleContentChange(value) {
+        setPost({ ...post, content: value });
     };
 
     function handleSubmit(event) {
@@ -45,8 +39,8 @@ function EditPostForm({ match }) {
     return (
         <PostForm title={post.title}
             content={post.content}
-            onTitleChange={handleTitleChange}
-            onContentChange={handleContentChange}
+            onTitleChange={(event) => handleTitleChange(event.target.value)}
+            onContentChange={(event) => handleContentChange(event.target.value)}
             onSubmit={handleSubmit} />
     );
 }

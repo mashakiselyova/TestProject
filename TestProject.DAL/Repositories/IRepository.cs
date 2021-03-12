@@ -4,9 +4,9 @@ namespace TestProject.DAL.Repositories
 {
     public interface IRepository<T>
     {
-        Task CreateAsync(T t);
-        Task UpdateAsync(T t);
-        Task DeleteAsync(int id);
-        Task<T> GetAsync(int id);
+        Task Create(T t);
+        Task Update(T t);
+        Task Delete(int id);
+        Task<T> Get(int id);
     }
 }

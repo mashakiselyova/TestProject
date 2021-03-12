@@ -8,7 +8,7 @@ import EditPostForm from "./EditPostForm";
 
 function Layout() {
     const [userProfile, setUserProfile] = useState({
-        name: undefined, email: undefined
+        name: undefined, email: undefined, id: undefined
     });
     const [userLoggedIn, setUserLoggedIn] = useState(false)
 
@@ -36,7 +36,7 @@ function Layout() {
             <Route exact path="/" render={() => <Main userLoggedIn={userLoggedIn} userProfile={userProfile} />} />
             <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
             <Route exact path="/posts/create" render={() => <CreatePostForm />} />
-            <Route path="/posts/edit/:id" render={(props) => <EditPostForm {...props} />} />
+            <Route path="/posts/edit/:id" render={(props) => <EditPostForm postId={props.match.params.id} />} />
         </div>        
     </div>;
 }

@@ -26,34 +26,41 @@ namespace TestProject.BL.Services
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
             post.UpdateDate = DateTime.Now;
-            await _postRepository.CreateAsync(post);
+            await _postRepository.Create(post);
         }
 
-        public async Task<List<PostModel>> GetAllPostsAsync()
+        public async Task<List<PostModel>> GetAll()
         {
             var posts = await _postRepository.GetAllPostsAsync();
             var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
             return postDisplayModels;
         }
 
-        public async Task<EditPostModel> GetPostAsync(int id)
+        public async Task<List<PostModel>> GetUserPosts(int id)
         {
-            var post = await _postRepository.GetAsync(id);
+            var posts = await _postRepository.GetUserPostsAsync(id);
+            var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
+            return postDisplayModels;
+        }
+
+        public async Task<EditPostModel> Get(int id)
+        {
+            var post = await _postRepository.Get(id);
             return PostMapper.MapPostToEditPostModel(post);
         }
 
-        public async Task EditPostAsync(EditPostModel editPostModel)
+        public async Task Edit(EditPostModel editPostModel)
         {
-            var post = await _postRepository.GetAsync(editPostModel.Id);
+            var post = await _postRepository.Get(editPostModel.Id);
             post.Title = editPostModel.Title;
             post.Content = editPostModel.Content;
             post.UpdateDate = DateTime.Now;
-            await _postRepository.UpdateAsync(post);
+            await _postRepository.Update(post);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task Delete(int id)
         {
-            await _postRepository.DeleteAsync(id);
-        }
+            await _postRepository.Delete(id);
+        }        
     }
 }

@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
+import PostForm from './PostForm';
 
 function EditPostForm({ match }) {
     const [post, setPost] = useState({ id: '', title: '', content: '' });
@@ -42,20 +43,12 @@ function EditPostForm({ match }) {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Title</label>
-                    <input type="text" className="form-control" value={post.title} onChange={handleTitleChange} />
-                </div>
-                <div className="form-group">
-                    <label>Text</label>
-                    <textarea rows="5" className="form-control" value={post.content} onChange={handleContentChange} />
-                </div>
-                <input type="submit" className="btn btn-primary" value="Save" />
-            </form>
-        </div>
-        );
+        <PostForm title={post.title}
+            content={post.content}
+            onTitleChange={handleTitleChange}
+            onContentChange={handleContentChange}
+            onSubmit={handleSubmit} />
+    );
 }
 
 export default EditPostForm;

@@ -1,11 +1,9 @@
 ﻿import React from 'react';
 
-function UserProfile(props) {
+function UserProfile({userProfile}) {
     return <div>
-        <div>First Name: { props.userProfile.firstName }</div>
-        <div>Last Name: {props.userProfile.lastName }</div>
-        <div>Email: {props.userProfile.email }</div>
-        <div>Raiting: {props.userProfile.raiting }</div>
+        <div>Name: {userProfile.name}</div>
+        <div>Email: {userProfile.email}</div>
     </div>;
 }
 

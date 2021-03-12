@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 
-function PostEditor() {
+function CreatePostForm() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
@@ -46,4 +46,4 @@ function PostEditor() {
     );
 }
 
-export default PostEditor;
+export default CreatePostForm;

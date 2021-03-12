@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,9 +28,22 @@ namespace TestProject.DAL.Repositories
                 .OrderByDescending(p => p.CreateDate).ToListAsync();
         }
 
-        public Task UpdateAsync(Post post)
+        public async Task<Post> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Posts.FindAsync(id);
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var post = await GetAsync(id);
+            _context.Posts.Remove(post);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Post post)
+        {
+            _context.Posts.Update(post);
+            await _context.SaveChangesAsync();
+        }       
     }
 }

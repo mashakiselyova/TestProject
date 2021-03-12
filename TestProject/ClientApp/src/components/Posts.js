@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import Post from './Post'
 
-function Posts() {
+function Posts({ userLoggedIn, userProfile }) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
@@ -16,7 +16,7 @@ function Posts() {
     return (
         <div>
             {posts.map((post) => (
-                <Post key={post.id} {...post} />
+                <Post key={post.id} post={post} userLoggedIn={userLoggedIn} userProfile={userProfile} />
             ))}
         </div>
     );

@@ -19,9 +19,9 @@ namespace TestProject.BL.Services
             _userRepository = userRepository;
         }
 
-        public async Task Create(PostEditorModel postEditorModel, string userEmail)
+        public async Task Create(CreatePostModel postEditorModel, string userEmail)
         {
-            var post = PostMapper.MapPostEditorModelToPost(postEditorModel);
+            var post = PostMapper.MapCreatePostModelToPost(postEditorModel);
             var user = await _userRepository.GetUserAsync(userEmail);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
@@ -34,6 +34,26 @@ namespace TestProject.BL.Services
             var posts = await _postRepository.GetAllPostsAsync();
             var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
             return postDisplayModels;
+        }
+
+        public async Task<EditPostModel> GetPostAsync(int id)
+        {
+            var post = await _postRepository.GetAsync(id);
+            return PostMapper.MapPostToEditPostModel(post);
+        }
+
+        public async Task EditPostAsync(EditPostModel editPostModel)
+        {
+            var post = await _postRepository.GetAsync(editPostModel.Id);
+            post.Title = editPostModel.Title;
+            post.Content = editPostModel.Content;
+            post.UpdateDate = DateTime.Now;
+            await _postRepository.UpdateAsync(post);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _postRepository.DeleteAsync(id);
         }
     }
 }

@@ -3,11 +3,12 @@ import { Route } from 'react-router';
 import Main from "./Main"
 import UserProfile from "./UserProfile"
 import Header from "./Header";
-import PostEditor from "./PostEditor";
+import CreatePostForm from "./CreatePostForm";
+import EditPostForm from "./EditPostForm";
 
 function Layout() {
     const [userProfile, setUserProfile] = useState({
-        firstName: undefined, lastName: undefined, email: undefined, raiting: undefined
+        name: undefined, email: undefined
     });
     const [userLoggedIn, setUserLoggedIn] = useState(false)
 
@@ -30,11 +31,12 @@ function Layout() {
     }, [])
 
     return <div>
-        <Header userLoggedIn={userLoggedIn} name={userProfile.firstName + ' ' + userProfile.lastName} />
+        <Header userLoggedIn={userLoggedIn} name={userProfile.name} />
         <div>
-            <Route exact path="/" render={() => <Main userLoggedIn={userLoggedIn} />} />
+            <Route exact path="/" render={() => <Main userLoggedIn={userLoggedIn} userProfile={userProfile} />} />
             <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
-            <Route exact path="/posts/create" render={() => <PostEditor />} />
+            <Route exact path="/posts/create" render={() => <CreatePostForm />} />
+            <Route path="/posts/edit/:id" render={(props) => <EditPostForm {...props} />} />
         </div>        
     </div>;
 }

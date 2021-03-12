@@ -36,5 +36,15 @@ namespace TestProject.DAL.Repositories
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
+
+        public Task DeleteAsync(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<User> GetAsync(int id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

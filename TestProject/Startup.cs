@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TestProject.BL.Services;
 using TestProject.DAL.Contexts;
+using TestProject.DAL.Repositories;
 
 namespace TestProject
 {
@@ -33,9 +35,6 @@ namespace TestProject
             {
                 configuration.RootPath = "ClientApp/build";
             });
-
-            services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("TestProject")), ServiceLifetime.Singleton);
 
             services.AddAuthentication(options =>
             {

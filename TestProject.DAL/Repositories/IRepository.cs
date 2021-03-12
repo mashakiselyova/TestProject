@@ -6,5 +6,7 @@ namespace TestProject.DAL.Repositories
     {
         Task CreateAsync(T t);
         Task UpdateAsync(T t);
+        Task DeleteAsync(int id);
+        Task<T> GetAsync(int id);
     }
 }

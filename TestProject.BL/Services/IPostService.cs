@@ -6,8 +6,8 @@ namespace TestProject.BL.Services
 {
     public interface IPostService
     {
-        Task Create(CreatePostModel postEditorModel, string userEmail);
-        Task<List<PostModel>> GetPosts(int? id);
+        Task Create(EditPostModel editPostModel);
+        Task<List<PostModel>> GetPosts(int? userId);
         Task<EditPostModel> Get(int id);
         Task Edit(EditPostModel editPostModel);
         Task Delete(int id);

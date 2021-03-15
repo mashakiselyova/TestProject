@@ -1,11 +1,11 @@
 ﻿import React, { useEffect, useState } from 'react';
 import Post from './Post'
 
-function Posts({ userLoggedIn, userProfile, userPosts }) {
+function Posts({ userProfile, filterByCurrentUser = false }) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        const url = userPosts ? `/posts/getPosts/${userProfile.id}` : "/posts/getPosts";
+        const url = filterByCurrentUser ? `/posts/getPosts/${userProfile.id}` : "/posts/getPosts";
         fetch(url, { method: 'get', mode: 'no-cors' })
             .then((response) => {
                 response.json().then((data) => {
@@ -17,7 +17,7 @@ function Posts({ userLoggedIn, userProfile, userPosts }) {
     return (
         <div>
             {posts.map((post) => (
-                <Post key={post.id} post={post} userLoggedIn={userLoggedIn} userProfile={userProfile} />
+                <Post key={post.id} post={post} userProfile={userProfile} />
             ))}
         </div>
     );

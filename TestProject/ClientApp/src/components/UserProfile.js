@@ -5,10 +5,10 @@ function UserProfile({ userProfile }) {
     return <div>
         <div>Name: {userProfile.name}</div>
         <div>Email: {userProfile.email}</div>
-        {userProfile.id !== undefined
+        {userProfile.id
             && <Posts userLoggedIn={true}
                 userProfile={userProfile}
-                userPosts={true} />}
+                filterByCurrentUser={true} />}
     </div>;
 }
 

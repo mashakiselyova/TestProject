@@ -5,12 +5,12 @@ namespace TestProject.BL.Mappers
 {
     public static class PostMapper
     {
-        public static Post MapCreatePostModelToPost(CreatePostModel postEditorModel)
+        public static Post MapEditPostModelToPost(EditPostModel editPostModel)
         {
             return new Post
             {
-                Title = postEditorModel.Title,
-                Content = postEditorModel.Content
+                Title = editPostModel.Title,
+                Content = editPostModel.Content
             };
         }
 

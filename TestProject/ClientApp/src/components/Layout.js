@@ -7,35 +7,33 @@ import PostForm from "./PostForm";
 
 function Layout() {
     const [userProfile, setUserProfile] = useState({
-        name: undefined, email: undefined, id: undefined
+        name: undefined, email: undefined, id: undefined, loggedIn: undefined
     });
-    const [userLoggedIn, setUserLoggedIn] = useState(false)
 
     useEffect(() => {
         fetch("/user/getUserProfile", { mode: 'no-cors' })
             .then((response) => {
                 if (response.ok) {
                     response.json().then((data) => {
-                        setUserProfile(data);
+                        setUserProfile({ ...data, loggedIn: true });
                     });
-                    setUserLoggedIn(true);
                 }
                 else {
-                    setUserLoggedIn(false);
+                    setUserProfile({ loggedIn: false });
                 }
             })
             .catch(() => {
-                setUserLoggedIn(false);
+                setUserProfile({ loggedIn: false });
             });
     }, [])
 
     return <div>
-        <Header userLoggedIn={userLoggedIn} name={userProfile.name} />
+        <Header userProfile={userProfile} />
         <div>
-            <Route exact path="/" render={() => <Main userLoggedIn={userLoggedIn} userProfile={userProfile} />} />
+            <Route exact path="/" render={() => <Main userProfile={userProfile} />} />
             <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
-            <Route exact path="/posts/create" render={() => <PostForm create={true} />} />
-            <Route path="/posts/edit/:id" render={(props) => <PostForm postId={props.match.params.id} create={false} />} />
+            <Route exact path="/posts/create" render={() => <PostForm userId={userProfile.id}/>} />
+            <Route path="/posts/edit/:id" render={(props) => <PostForm postId={props.match.params.id} editing={true} />} />
         </div>        
     </div>;
 }

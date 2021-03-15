@@ -4,7 +4,7 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
 import ConfirmDelete from "./ConfirmDelete";
 
-function Post({ post, userLoggedIn, userProfile }) {
+function Post({ post, userProfile }) {
 
     function handleDelete() {
         fetch(`/posts/delete/${post.id}`, {
@@ -13,8 +13,9 @@ function Post({ post, userLoggedIn, userProfile }) {
             if (response.status === 200) {
                 window.location.pathname = '/';
             }
-        }).catch(() => {
-            NotificationManager.error("Couldn't delete this post");
+            else throw new Error("Couldn't delete this post")
+        }).catch((error) => {
+            NotificationManager.error(error);
         });
     }
 
@@ -25,11 +26,17 @@ function Post({ post, userLoggedIn, userProfile }) {
                 <h5 className="card-title">{post.title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{new Date(post.createDate).toLocaleDateString()}</h6>
                 <p className="card-text">{post.content}</p>
-                {userLoggedIn && userProfile.id === post.author.id
+                {userProfile.loggedIn && userProfile.id === post.author.id
                     && <div>
                         <Link to={`/posts/edit/${post.id}`} className="btn btn-primary btn-sm m-1">Edit</Link>
-                        <button type="button" data-toggle="modal" data-target={`#confirmDelete${post.id}`}
-                            className="btn btn-danger btn-sm m-1">Delete</button>
+                        <button
+                            type="button"
+                            data-toggle="modal"
+                            data-target={`#confirmDelete${post.id}`}
+                            className="btn btn-danger btn-sm m-1"
+                        >
+                            Delete
+                        </button>
                     </div>}
             </div>
             <NotificationContainer />

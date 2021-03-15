@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
-using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
 
 namespace TestProject.BL.Services
@@ -20,36 +19,25 @@ namespace TestProject.BL.Services
             _userRepository = userRepository;
         }
 
-        public async Task Create(CreatePostModel postEditorModel, string userEmail)
+        public async Task Create(EditPostModel editPostModel)
         {
-            var post = PostMapper.MapCreatePostModelToPost(postEditorModel);
-            var user = await _userRepository.GetUserAsync(userEmail);
+            var post = PostMapper.MapEditPostModelToPost(editPostModel);
+            var user = await _userRepository.Get(editPostModel.UserId);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
             post.UpdateDate = DateTime.Now;
             await _postRepository.Create(post);
         }
 
-        public async Task<List<PostModel>> GetAll()
+        public async Task<List<PostModel>> GetPosts(int? userId)
         {
-            var posts = await _postRepository.GetAllPosts();
-            var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
-            return postDisplayModels;
-        }
-
-        public async Task<List<PostModel>> GetPosts(int? id)
-        {
-            var posts = new List<Post>();
-            if (id == null)
+            if (userId == null)
             {
-                posts = await _postRepository.GetAllPosts();
+                return (await _postRepository.GetAllPosts())
+                    .Select(PostMapper.MapPostToPostModel).ToList();
             }
-            else
-            {
-                posts = await _postRepository.GetUserPosts(id.Value);
-            }
-            var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
-            return postDisplayModels;
+            return (await _postRepository.GetUserPosts(userId.Value))
+            .Select(PostMapper.MapPostToPostModel).ToList();
         }
 
         public async Task<EditPostModel> Get(int id)

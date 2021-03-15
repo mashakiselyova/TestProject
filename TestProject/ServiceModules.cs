@@ -15,7 +15,7 @@ namespace TestProject
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            RegisterContext<ApplicationContext>(builder);
+            RegisterContext(builder);
             RegisterRepositories(builder);
             RegisterServices(builder);
         }
@@ -32,14 +32,14 @@ namespace TestProject
             builder.RegisterType<PostRepository>().As<IPostRepository>();
         }
 
-        private void RegisterContext<TContext>(ContainerBuilder builder) where TContext : DbContext
+        private void RegisterContext(ContainerBuilder builder)
         {
             builder.Register(componentContext =>
             {
                 var serviceProvider = componentContext.Resolve<IServiceProvider>();
                 var configuration = componentContext.Resolve<IConfiguration>();
-                var dbContextOptions = new DbContextOptions<TContext>(new Dictionary<Type, IDbContextOptionsExtension>());
-                var optionsBuilder = new DbContextOptionsBuilder<TContext>(dbContextOptions)
+                var dbContextOptions = new DbContextOptions<ApplicationContext>(new Dictionary<Type, IDbContextOptionsExtension>());
+                var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>(dbContextOptions)
                     .UseApplicationServiceProvider(serviceProvider)
                 .UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                 serverOptions =>
@@ -49,14 +49,14 @@ namespace TestProject
                 });
 
                 return optionsBuilder.Options;
-            }).As<DbContextOptions<TContext>>()
+            }).As<DbContextOptions<ApplicationContext>>()
                 .InstancePerLifetimeScope();
 
-            builder.Register(context => context.Resolve<DbContextOptions<TContext>>())
+            builder.Register(context => context.Resolve<DbContextOptions<ApplicationContext>>())
                 .As<DbContextOptions>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<TContext>()
+            builder.RegisterType<ApplicationContext>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
         }

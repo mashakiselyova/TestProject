@@ -2,16 +2,16 @@
 import { Link } from 'react-router-dom';
 import Posts from './Posts';
 
-function Main({ userLoggedIn, userProfile }) {
+function Main({ userProfile }) {
     return (
         <div className="row">
             <div className="col-2">
-                {userLoggedIn
+                {userProfile.loggedIn
                     ? <Link to="/posts/create" className="btn btn-primary mt-1">New Post</Link>
                     : <p>You need to sign in to create new posts</p>}
             </div>
             <div className="col-8">
-                <Posts userLoggedIn={userLoggedIn} userProfile={userProfile} userPosts={false} />
+                <Posts userProfile={userProfile} />
             </div>
         </div>
     );

@@ -1,18 +1,19 @@
 ﻿import React, { useState, useEffect } from 'react';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
-function PostForm({ postId, create }) {
-    const [post, setPost] = useState({ id: '', title: '', content: '' });
+function PostForm({ userId, postId, editing = false }) {
+    const [post, setPost] = useState({ id: 0, title: '', content: '', userId });
 
     useEffect(() => {
-        if (!create) {
-            fetch(`/posts/getPost/${postId}`, { method: 'get', mode: 'no-cors' })
+        if (editing) {
+            fetch(`/posts/get/${postId}`, { method: 'get', mode: 'no-cors' })
                 .then((response) => {
                     response.json().then((data) => {
                         setPost(data);
                     });
                 });
         }
-    }, [])
+    }, [editing])
 
     function handleTitleChange(value) {
         setPost({ ...post, title: value });
@@ -22,26 +23,26 @@ function PostForm({ postId, create }) {
         setPost({ ...post, content: value });
     };
 
-    function handleSubmit(event) {
-        const url = create ? "/posts/createPost" : "/posts/editPost";
-        const status = create ? 201 : 200;
-        event.preventDefault();
-        fetch(url, {
+    function handleSubmit() {
+        fetch("/posts/edit", {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(post)
         }).then((response) => {
-            if (response.status === status) {
+            if (response.status === 200) {
                 window.location.pathname = '/';
             }
+            else throw new Error("Couldn't create post")
+        }).catch((error) => {
+            NotificationManager.error(error);
         });
     };
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form>
                 <div className="form-group">
                     <label>Title</label>
                     <input type="text" className="form-control" value={post.title}
@@ -52,8 +53,9 @@ function PostForm({ postId, create }) {
                     <textarea rows="5" className="form-control" value={post.content}
                         onChange={(event) => handleContentChange(event.target.value)} />
                 </div>
-                <input type="submit" className="btn btn-primary" value="Create" />
+                <button className="btn btn-primary" onClick={handleSubmit} >Create</button>
             </form>
+            <NotificationContainer />
         </div>
     );
 }

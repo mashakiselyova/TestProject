@@ -7,7 +7,6 @@ using TestProject.BL.Services;
 using TestProject.Filters;
 using TestProject.Mappers;
 using TestProject.Models;
-using TestProject.Utils;
 
 namespace TestProject.Controllers
 {
@@ -21,34 +20,32 @@ namespace TestProject.Controllers
             _postService = postService;
         }
 
-        [HttpPost]
-        [Route("createPost")]
-        [CustomAuthorizationFilter]
-        public async Task<IActionResult> Create([FromBody]CreatePostModel post)
+        [Route("getPosts/{userId?}")]
+        public async Task<List<PostDisplayModel>> GetPosts([FromRoute] int? userId)
         {
-            await _postService.Create(post, User.GetEmail());
-
-            return new StatusCodeResult(201);
-        }
-
-        [Route("getPosts/{id?}")]
-        public async Task<List<PostDisplayModel>> GetPosts([FromRoute] int? id)
-        {
-            var posts = await _postService.GetPosts(id);
+            var posts = await _postService.GetPosts(userId);
             return posts.Select(PostMapper.MapPostModelToPostModel).ToList();
         }
 
-        [Route("/posts/getPost/{id}")]
-        public async Task<EditPostModel> GetPost([FromRoute] int id)
+        [Route("/posts/get/{id}")]
+        public async Task<EditPostModel> Get([FromRoute] int id)
         {
             return await _postService.Get(id);
         }
 
         [HttpPost]
-        [Route("/posts/editPost")]
-        public async Task<IActionResult> EditPost([FromBody] EditPostModel post)
+        [CustomAuthorizationFilter]
+        [Route("/posts/edit")]
+        public async Task<IActionResult> Edit([FromBody] EditPostModel post)
         {
-            await _postService.Edit(post);
+            if (post.Id == 0)
+            {
+                await _postService.Create(post);
+            }
+            else
+            {
+                await _postService.Edit(post);
+            }            
             return Ok();
         }
 

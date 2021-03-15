@@ -42,9 +42,9 @@ namespace TestProject.DAL.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task<User> Get(int id)
+        public async Task<User> Get(int id)
         {
-            throw new System.NotImplementedException();
+            return await _context.Users.FindAsync(id);
         }
     }
 }

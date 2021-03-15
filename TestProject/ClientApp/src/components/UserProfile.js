@@ -8,7 +8,7 @@ function UserProfile({ userProfile }) {
         {userProfile.id !== undefined
             && <Posts userLoggedIn={true}
                 userProfile={userProfile}
-                url={`/posts/getUserPosts/${userProfile.id}`} />}
+                userPosts={true} />}
     </div>;
 }
 

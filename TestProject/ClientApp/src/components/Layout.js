@@ -3,8 +3,7 @@ import { Route } from 'react-router';
 import Main from "./Main"
 import UserProfile from "./UserProfile"
 import Header from "./Header";
-import CreatePostForm from "./CreatePostForm";
-import EditPostForm from "./EditPostForm";
+import PostForm from "./PostForm";
 
 function Layout() {
     const [userProfile, setUserProfile] = useState({
@@ -35,8 +34,8 @@ function Layout() {
         <div>
             <Route exact path="/" render={() => <Main userLoggedIn={userLoggedIn} userProfile={userProfile} />} />
             <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
-            <Route exact path="/posts/create" render={() => <CreatePostForm />} />
-            <Route path="/posts/edit/:id" render={(props) => <EditPostForm postId={props.match.params.id} />} />
+            <Route exact path="/posts/create" render={() => <PostForm create={true} />} />
+            <Route path="/posts/edit/:id" render={(props) => <PostForm postId={props.match.params.id} create={false} />} />
         </div>        
     </div>;
 }

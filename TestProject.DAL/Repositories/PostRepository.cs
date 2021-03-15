@@ -22,13 +22,13 @@ namespace TestProject.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Post>> GetAllPostsAsync()
+        public async Task<List<Post>> GetAllPosts()
         {
             return await _context.Posts.Include(p => p.User)
                 .OrderByDescending(p => p.CreateDate).ToListAsync();
         }
 
-        public async Task<List<Post>> GetUserPostsAsync(int id)
+        public async Task<List<Post>> GetUserPosts(int id)
         {
             return await _context.Posts.Where(p => p.UserId == id).Include(p => p.User)
                 .OrderByDescending(p => p.CreateDate).ToListAsync();

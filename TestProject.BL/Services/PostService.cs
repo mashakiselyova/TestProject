@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
+using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
 
 namespace TestProject.BL.Services
@@ -31,14 +32,22 @@ namespace TestProject.BL.Services
 
         public async Task<List<PostModel>> GetAll()
         {
-            var posts = await _postRepository.GetAllPostsAsync();
+            var posts = await _postRepository.GetAllPosts();
             var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
             return postDisplayModels;
         }
 
-        public async Task<List<PostModel>> GetUserPosts(int id)
+        public async Task<List<PostModel>> GetPosts(int? id)
         {
-            var posts = await _postRepository.GetUserPostsAsync(id);
+            var posts = new List<Post>();
+            if (id == null)
+            {
+                posts = await _postRepository.GetAllPosts();
+            }
+            else
+            {
+                posts = await _postRepository.GetUserPosts(id.Value);
+            }
             var postDisplayModels = posts.Select(PostMapper.MapPostToPostModel).ToList();
             return postDisplayModels;
         }

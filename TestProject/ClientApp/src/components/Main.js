@@ -11,7 +11,7 @@ function Main({ userLoggedIn, userProfile }) {
                     : <p>You need to sign in to create new posts</p>}
             </div>
             <div className="col-8">
-                <Posts userLoggedIn={userLoggedIn} userProfile={userProfile} url="/posts/getAllPosts" />
+                <Posts userLoggedIn={userLoggedIn} userProfile={userProfile} userPosts={false} />
             </div>
         </div>
     );

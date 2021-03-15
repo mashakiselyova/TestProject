@@ -24,36 +24,29 @@ namespace TestProject.Controllers
         [HttpPost]
         [Route("createPost")]
         [CustomAuthorizationFilter]
-        public async Task<IActionResult> CreateAsync([FromBody]CreatePostModel post)
+        public async Task<IActionResult> Create([FromBody]CreatePostModel post)
         {
             await _postService.Create(post, User.GetEmail());
 
             return new StatusCodeResult(201);
         }
 
-        [Route("getAllPosts")]
-        public async Task<List<PostDisplayModel>> GetAllPostsAsync()
+        [Route("getPosts/{id?}")]
+        public async Task<List<PostDisplayModel>> GetPosts([FromRoute] int? id)
         {
-            var posts = await _postService.GetAll();
-            return posts.Select(PostMapper.MapPostModelToPostModel).ToList();
-        }
-
-        [Route("getUserPosts/{id}")]
-        public async Task<List<PostDisplayModel>> GetUserPostsAsync([FromRoute] int id)
-        {
-            var posts = await _postService.GetUserPosts(id);
+            var posts = await _postService.GetPosts(id);
             return posts.Select(PostMapper.MapPostModelToPostModel).ToList();
         }
 
         [Route("/posts/getPost/{id}")]
-        public async Task<EditPostModel> GetPostAsync([FromRoute] int id)
+        public async Task<EditPostModel> GetPost([FromRoute] int id)
         {
             return await _postService.Get(id);
         }
 
         [HttpPost]
         [Route("/posts/editPost")]
-        public async Task<IActionResult> EditPostAsync([FromBody] EditPostModel post)
+        public async Task<IActionResult> EditPost([FromBody] EditPostModel post)
         {
             await _postService.Edit(post);
             return Ok();
@@ -61,7 +54,7 @@ namespace TestProject.Controllers
 
         [HttpPost]
         [Route("/posts/delete/{id}")]
-        public async Task<IActionResult> DeleteAsync([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             await _postService.Delete(id);
             return Ok();

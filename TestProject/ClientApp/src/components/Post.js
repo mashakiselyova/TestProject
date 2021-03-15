@@ -1,5 +1,8 @@
 ﻿import React from 'react';
 import { Link } from 'react-router-dom';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import ConfirmDelete from "./ConfirmDelete";
 
 function Post({ post, userLoggedIn, userProfile }) {
 
@@ -11,7 +14,7 @@ function Post({ post, userLoggedIn, userProfile }) {
                 window.location.pathname = '/';
             }
         }).catch(() => {
-            window.alert("Couldn't delete this post");
+            NotificationManager.error("Couldn't delete this post");
         });
     }
 
@@ -24,11 +27,13 @@ function Post({ post, userLoggedIn, userProfile }) {
                 <p className="card-text">{post.content}</p>
                 {userLoggedIn && userProfile.id === post.author.id
                     && <div>
-                    <Link to={`/posts/edit/${post.id}`} className="btn btn-primary btn-sm m-1">Edit</Link>
-                    <button onClick={() => { if (window.confirm("Are you sure you want to delete this post?")) handleDelete() }}
-                        className="btn btn-danger btn-sm m-1">Delete</button>
+                        <Link to={`/posts/edit/${post.id}`} className="btn btn-primary btn-sm m-1">Edit</Link>
+                        <button type="button" data-toggle="modal" data-target={`#confirmDelete${post.id}`}
+                            className="btn btn-danger btn-sm m-1">Delete</button>
                     </div>}
             </div>
+            <NotificationContainer />
+            <ConfirmDelete postId={post.id} onDelete={handleDelete} />
         </div>
     );
 }

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TestProject.BL.Models;
 using TestProject.BL.Services;
 using TestProject.Filters;
 using TestProject.Mappers;
 using TestProject.Models;
+using TestProject.Utils;
 
 namespace TestProject.Controllers
 {
@@ -20,8 +20,8 @@ namespace TestProject.Controllers
             _postService = postService;
         }
 
-        [Route("getPosts/{userId?}")]
-        public async Task<List<PostDisplayModel>> GetPosts([FromRoute] int? userId)
+        [Route("getAll/{userId?}")]
+        public async Task<List<PostDisplayModel>> GetAll([FromRoute] int? userId)
         {
             var posts = await _postService.GetPosts(userId);
             return posts.Select(PostMapper.MapPostModelToPostModel).ToList();
@@ -30,7 +30,7 @@ namespace TestProject.Controllers
         [Route("/posts/get/{id}")]
         public async Task<EditPostModel> Get([FromRoute] int id)
         {
-            return await _postService.Get(id);
+            return PostMapper.MapEditPostModelDlToWeb(await _postService.Get(id));
         }
 
         [HttpPost]
@@ -40,11 +40,11 @@ namespace TestProject.Controllers
         {
             if (post.Id == 0)
             {
-                await _postService.Create(post);
+                await _postService.Create(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
             }
             else
             {
-                await _postService.Edit(post);
+                await _postService.Edit(PostMapper.MapEditPostModelWebToBl(post));
             }            
             return Ok();
         }

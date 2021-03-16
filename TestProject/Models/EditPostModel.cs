@@ -1,4 +1,4 @@
-﻿namespace TestProject.BL.Models
+﻿namespace TestProject.Models
 {
     public class EditPostModel
     {

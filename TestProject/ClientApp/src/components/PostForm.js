@@ -1,8 +1,8 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
-function PostForm({ userId, postId, editing = false }) {
-    const [post, setPost] = useState({ id: 0, title: '', content: '', userId });
+function PostForm({ postId, editing = false }) {
+    const [post, setPost] = useState({ id: 0, title: '', content: '' });
 
     useEffect(() => {
         if (editing) {
@@ -53,7 +53,7 @@ function PostForm({ userId, postId, editing = false }) {
                     <textarea rows="5" className="form-control" value={post.content}
                         onChange={(event) => handleContentChange(event.target.value)} />
                 </div>
-                <button className="btn btn-primary" onClick={handleSubmit} >Create</button>
+                <button className="btn btn-primary" onClick={handleSubmit} >{editing ? "Edit" : "Create"}</button>
             </form>
             <NotificationContainer />
         </div>

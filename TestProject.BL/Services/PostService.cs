@@ -19,10 +19,10 @@ namespace TestProject.BL.Services
             _userRepository = userRepository;
         }
 
-        public async Task Create(EditPostModel editPostModel)
+        public async Task Create(EditPostModel editPostModel, string userEmail)
         {
             var post = PostMapper.MapEditPostModelToPost(editPostModel);
-            var user = await _userRepository.Get(editPostModel.UserId);
+            var user = await _userRepository.GetUserByEmail(userEmail);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
             post.UpdateDate = DateTime.Now;
@@ -37,7 +37,7 @@ namespace TestProject.BL.Services
                     .Select(PostMapper.MapPostToPostModel).ToList();
             }
             return (await _postRepository.GetUserPosts(userId.Value))
-            .Select(PostMapper.MapPostToPostModel).ToList();
+                .Select(PostMapper.MapPostToPostModel).ToList();
         }
 
         public async Task<EditPostModel> Get(int id)

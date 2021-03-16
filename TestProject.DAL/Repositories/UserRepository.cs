@@ -26,7 +26,7 @@ namespace TestProject.DAL.Repositories
             return _context.Users.Any(u => u.Email == email);
         }
 
-        public async Task<User> GetUserAsync(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
             return await _context.Users.SingleAsync(u => u.Email == email);
         }

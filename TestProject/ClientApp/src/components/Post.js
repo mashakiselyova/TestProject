@@ -13,7 +13,9 @@ function Post({ post, userProfile }) {
             if (response.status === 200) {
                 window.location.pathname = '/';
             }
-            else NotificationManager.error("Couldn't delete this post");
+            else {
+                NotificationManager.error("Couldn't delete this post");
+            }
         }).catch(() => {
             NotificationManager.error("Couldn't delete this post");
         });

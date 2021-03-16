@@ -44,7 +44,7 @@ namespace TestProject.Controllers
             }
             else
             {
-                await _postService.Edit(PostMapper.MapEditPostModelWebToBl(post));
+                await _postService.Edit(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
             }            
             return Ok();
         }

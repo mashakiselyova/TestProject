@@ -46,13 +46,17 @@ namespace TestProject.BL.Services
             return PostMapper.MapPostToEditPostModel(post);
         }
 
-        public async Task Edit(EditPostModel editPostModel)
+        public async Task Edit(EditPostModel editPostModel, string userEmail)
         {
-            var post = await _postRepository.Get(editPostModel.Id);
-            post.Title = editPostModel.Title;
-            post.Content = editPostModel.Content;
-            post.UpdateDate = DateTime.Now;
-            await _postRepository.Update(post);
+            var currentUser = await _userRepository.GetUserByEmail(userEmail);
+            if (editPostModel.Id == currentUser.Id)
+            {
+                var post = await _postRepository.Get(editPostModel.Id);
+                post.Title = editPostModel.Title;
+                post.Content = editPostModel.Content;
+                post.UpdateDate = DateTime.Now;
+                await _postRepository.Update(post);
+            }            
         }
 
         public async Task Delete(int id)

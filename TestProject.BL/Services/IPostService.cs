@@ -9,7 +9,7 @@ namespace TestProject.BL.Services
         Task Create(EditPostModel editPostModel, string userEmail);
         Task<List<PostModel>> GetPosts(int? userId);
         Task<EditPostModel> Get(int id);
-        Task Edit(EditPostModel editPostModel);
+        Task Edit(EditPostModel editPostModel, string userEmail);
         Task Delete(int id);
     }
 }

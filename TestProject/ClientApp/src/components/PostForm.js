@@ -11,6 +11,8 @@ function PostForm({ postId, editing = false }) {
                     response.json().then((data) => {
                         setPost(data);
                     });
+                }).catch(() => {
+                    NotificationManager.error("Couldn't load post");
                 });
         }
     }, [editing])
@@ -34,9 +36,11 @@ function PostForm({ postId, editing = false }) {
             if (response.status === 200) {
                 window.location.pathname = '/';
             }
-            else throw new Error("Couldn't create post")
-        }).catch((error) => {
-            NotificationManager.error(error);
+            else {
+                NotificationManager.error(`Couldn't ${editing ? "edit" : "create"} post`);
+            }
+        }).catch(() => {
+            NotificationManager.error(`Couldn't ${editing ? "edit" : "create"} post`);
         });
     };
 

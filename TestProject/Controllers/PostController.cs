@@ -38,15 +38,23 @@ namespace TestProject.Controllers
         [Route("/posts/edit")]
         public async Task<IActionResult> Edit([FromBody] EditPostModel post)
         {
-            if (post.Id == 0)
+            try
             {
-                await _postService.Create(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
+                if (post.Id == 0)
+                {
+                    await _postService.Create(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
+                }
+                else
+                {
+                    await _postService.Edit(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
+                }
+                return Ok();
             }
-            else
+            catch
             {
-                await _postService.Edit(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
-            }            
-            return Ok();
+                return StatusCode(500);
+            }
+            
         }
 
         [HttpPost]

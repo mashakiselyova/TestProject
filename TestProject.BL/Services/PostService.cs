@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
 using TestProject.DAL.Repositories;
@@ -49,14 +50,18 @@ namespace TestProject.BL.Services
         public async Task Edit(EditPostModel editPostModel, string userEmail)
         {
             var currentUser = await _userRepository.GetUserByEmail(userEmail);
-            if (editPostModel.Id == currentUser.Id)
+            var post = await _postRepository.Get(editPostModel.Id);
+            if (post.UserId == currentUser.Id)
             {
-                var post = await _postRepository.Get(editPostModel.Id);
                 post.Title = editPostModel.Title;
                 post.Content = editPostModel.Content;
                 post.UpdateDate = DateTime.Now;
                 await _postRepository.Update(post);
-            }            
+            }
+            else
+            {
+                throw new EditFailedException();
+            }
         }
 
         public async Task Delete(int id)

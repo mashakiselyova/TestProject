@@ -28,7 +28,7 @@ namespace TestProject.BL.Services
 
         public async Task<UserProfile> GetUserProfileAsync(string email)
         {
-            var user = await _userRepository.GetUserAsync(email);
+            var user = await _userRepository.GetUserByEmail(email);
             return UserMapper.MapUserToUserProfile(user);
         }
         
@@ -40,17 +40,17 @@ namespace TestProject.BL.Services
         private async Task Create(UserLoginModel userLoginModel)
         {
             var user = UserMapper.MapUserLoginModelToUser(userLoginModel);
-            await _userRepository.CreateAsync(user);
+            await _userRepository.Create(user);
         }
 
         private async Task UpdateAsync(UserLoginModel userLoginModel)
         {
-            var user = await _userRepository.GetUserAsync(userLoginModel.Email);
+            var user = await _userRepository.GetUserByEmail(userLoginModel.Email);
             if (UserHasChanged(userLoginModel, user))
             {
                 var newUser = UserMapper.MapUserLoginModelToUser(userLoginModel);
                 newUser.Id = user.Id;
-                await _userRepository.UpdateAsync(newUser);
+                await _userRepository.Update(newUser);
             }
         }
     }

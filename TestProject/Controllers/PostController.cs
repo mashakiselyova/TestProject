@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TestProject.BL.Models;
 using TestProject.BL.Services;
 using TestProject.Filters;
 using TestProject.Mappers;
@@ -21,21 +20,49 @@ namespace TestProject.Controllers
             _postService = postService;
         }
 
-        [HttpPost]
-        [Route("createPost")]
-        [CustomAuthorizationFilter]
-        public IActionResult Create([FromBody]PostEditorModel post)
+        [Route("getAll/{userId?}")]
+        public async Task<List<PostDisplayModel>> GetAll([FromRoute] int? userId)
         {
-            _postService.Create(post, User.GetEmail());
-
-            return new StatusCodeResult(201);
+            var posts = await _postService.GetPosts(userId);
+            return posts.Select(PostMapper.MapPostModelToPostModel).ToList();
         }
 
-        [Route("getAllPosts")]
-        public async Task<List<PostDisplayModel>> GetAllPostsAsync()
+        [Route("/posts/get/{id}")]
+        public async Task<EditPostModel> Get([FromRoute] int id)
         {
-            var posts = await _postService.GetAllPostsAsync();
-            return posts.Select(PostMapper.MapPostModelToPostModel).ToList();
+            return PostMapper.MapEditPostModelDlToWeb(await _postService.Get(id));
+        }
+
+        [HttpPost]
+        [CustomAuthorizationFilter]
+        [Route("/posts/edit")]
+        public async Task<IActionResult> Edit([FromBody] EditPostModel post)
+        {
+            try
+            {
+                if (post.Id == 0)
+                {
+                    await _postService.Create(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
+                }
+                else
+                {
+                    await _postService.Edit(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
+                }
+                return Ok();
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+            
+        }
+
+        [HttpPost]
+        [Route("/posts/delete/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            await _postService.Delete(id);
+            return Ok();
         }
     }
 }

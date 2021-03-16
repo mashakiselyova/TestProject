@@ -15,7 +15,7 @@ namespace TestProject.DAL.Repositories
             _context = context;
         }
 
-        public async Task CreateAsync(User user)
+        public async Task Create(User user)
         {
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -26,15 +26,25 @@ namespace TestProject.DAL.Repositories
             return _context.Users.Any(u => u.Email == email);
         }
 
-        public async Task<User> GetUserAsync(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
             return await _context.Users.SingleAsync(u => u.Email == email);
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task Update(User user)
         {
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
+        }
+
+        public Task Delete(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<User> Get(int id)
+        {
+            return await _context.Users.FindAsync(id);
         }
     }
 }

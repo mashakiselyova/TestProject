@@ -5,12 +5,12 @@ namespace TestProject.BL.Mappers
 {
     public static class PostMapper
     {
-        public static Post MapPostEditorModelToPost(PostEditorModel postEditorModel)
+        public static Post MapEditPostModelToPost(EditPostModel editPostModel)
         {
             return new Post
             {
-                Title = postEditorModel.Title,
-                Content = postEditorModel.Content
+                Title = editPostModel.Title,
+                Content = editPostModel.Content
             };
         }
 
@@ -24,6 +24,16 @@ namespace TestProject.BL.Mappers
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
                 Author = post.User
+            };
+        }
+
+        public static EditPostModel MapPostToEditPostModel(Post post)
+        {
+            return new EditPostModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content
             };
         }
     }

@@ -6,6 +6,7 @@ namespace TestProject.DAL.Repositories
 {
     public interface IPostRepository : IRepository<Post>
     {
-        Task<List<Post>> GetAllPostsAsync();
+        Task<List<Post>> GetAllPosts();
+        Task<List<Post>> GetUserPosts(int id);
     }
 }

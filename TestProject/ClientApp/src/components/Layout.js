@@ -3,38 +3,37 @@ import { Route } from 'react-router';
 import Main from "./Main"
 import UserProfile from "./UserProfile"
 import Header from "./Header";
-import PostEditor from "./PostEditor";
+import PostForm from "./PostForm";
 
 function Layout() {
     const [userProfile, setUserProfile] = useState({
-        firstName: undefined, lastName: undefined, email: undefined, raiting: undefined
+        name: undefined, email: undefined, id: undefined, loggedIn: undefined
     });
-    const [userLoggedIn, setUserLoggedIn] = useState(false)
 
     useEffect(() => {
         fetch("/user/getUserProfile", { mode: 'no-cors' })
             .then((response) => {
                 if (response.ok) {
                     response.json().then((data) => {
-                        setUserProfile(data);
+                        setUserProfile({ ...data, loggedIn: true });
                     });
-                    setUserLoggedIn(true);
                 }
                 else {
-                    setUserLoggedIn(false);
+                    setUserProfile({ loggedIn: false });
                 }
             })
             .catch(() => {
-                setUserLoggedIn(false);
+                setUserProfile({ loggedIn: false });
             });
     }, [])
 
     return <div>
-        <Header userLoggedIn={userLoggedIn} name={userProfile.firstName + ' ' + userProfile.lastName} />
+        <Header userProfile={userProfile} />
         <div>
-            <Route exact path="/" render={() => <Main userLoggedIn={userLoggedIn} />} />
+            <Route exact path="/" render={() => <Main userProfile={userProfile} />} />
             <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
-            <Route exact path="/posts/create" render={() => <PostEditor />} />
+            <Route exact path="/posts/create" render={() => <PostForm userId={userProfile.id}/>} />
+            <Route path="/posts/edit/:id" render={(props) => <PostForm postId={props.match.params.id} editing={true} />} />
         </div>        
     </div>;
 }

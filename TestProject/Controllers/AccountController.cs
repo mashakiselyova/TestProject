@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestProject.BL.Services;
 using TestProject.BL.Models;
+using TestProject.Models;
+using TestProject.Mappers;
 
 namespace TestProject.Controllers
 {
@@ -15,9 +17,12 @@ namespace TestProject.Controllers
     public class AccountController : Controller
     {
         private IUserService _userService;
-        public AccountController(IUserService userService)
+        private IMapper<LoginModel, UserLoginModel> _loginMapper;
+
+        public AccountController(IUserService userService, IMapper<LoginModel, UserLoginModel> loginMapper)
         {
             _userService = userService;
+            _loginMapper = loginMapper;
         }
 
         [AllowAnonymous]
@@ -37,13 +42,13 @@ namespace TestProject.Controllers
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             var claims = result.Principal.Identities.FirstOrDefault().Claims;
-            var user = new UserLoginModel
+            var user = new LoginModel
             {
                 FirstName = claims.FirstOrDefault(claim => claim.Type.Contains("givenname")).Value,
                 LastName = claims.FirstOrDefault(claim => claim.Type.Contains("surname")).Value,
                 Email = claims.FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value
             };
-            await _userService.AddOrUpdateUserAsync(user);
+            await _userService.AddOrUpdateUserAsync(_loginMapper.ToBlModel(user));
 
             return Redirect("/");
         }

@@ -3,18 +3,9 @@ using TestProject.BL.Models;
 
 namespace TestProject.BL.Mappers
 {
-    public static class PostMapper
+    public class PostMapper : IMapper<PostModel, Post>
     {
-        public static Post MapEditPostModelToPost(EditPostModel editPostModel)
-        {
-            return new Post
-            {
-                Title = editPostModel.Title,
-                Content = editPostModel.Content
-            };
-        }
-
-        public static PostModel MapPostToPostModel(Post post)
+        public PostModel ToBlModel(Post post)
         {
             return new PostModel
             {
@@ -27,14 +18,9 @@ namespace TestProject.BL.Mappers
             };
         }
 
-        public static EditPostModel MapPostToEditPostModel(Post post)
+        public Post ToDalModel(PostModel post)
         {
-            return new EditPostModel
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Content = post.Content
-            };
+            throw new System.NotImplementedException();
         }
     }
 }

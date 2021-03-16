@@ -9,10 +9,16 @@ namespace TestProject.BL.Services
     public class UserService : IUserService
     {
         private IUserRepository _userRepository;
+        private IMapper<UserLoginModel, User> _userLoginMapper;
+        private IMapper<UserProfile, User> _userProfileMapper;
 
-        public UserService(IUserRepository repository)
+        public UserService(IUserRepository repository, 
+            IMapper<UserLoginModel, User> userLoginMapper,
+            IMapper<UserProfile, User> userProfileMapper)
         {
             _userRepository = repository;
+            _userLoginMapper = userLoginMapper;
+            _userProfileMapper = userProfileMapper;
         }
         public async Task AddOrUpdateUserAsync(UserLoginModel userLoginModel)
         {
@@ -29,7 +35,7 @@ namespace TestProject.BL.Services
         public async Task<UserProfile> GetUserProfileAsync(string email)
         {
             var user = await _userRepository.GetUserByEmail(email);
-            return UserMapper.MapUserToUserProfile(user);
+            return _userProfileMapper.ToBlModel(user);
         }
         
         private bool UserHasChanged(UserLoginModel userLoginModel, User user)
@@ -39,7 +45,7 @@ namespace TestProject.BL.Services
 
         private async Task Create(UserLoginModel userLoginModel)
         {
-            var user = UserMapper.MapUserLoginModelToUser(userLoginModel);
+            var user = _userLoginMapper.ToDalModel(userLoginModel);
             await _userRepository.Create(user);
         }
 
@@ -48,7 +54,7 @@ namespace TestProject.BL.Services
             var user = await _userRepository.GetUserByEmail(userLoginModel.Email);
             if (UserHasChanged(userLoginModel, user))
             {
-                var newUser = UserMapper.MapUserLoginModelToUser(userLoginModel);
+                var newUser = _userLoginMapper.ToDalModel(userLoginModel);
                 newUser.Id = user.Id;
                 await _userRepository.Update(newUser);
             }

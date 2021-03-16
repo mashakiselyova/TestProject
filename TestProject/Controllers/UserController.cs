@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
 using TestProject.Filters;
+using TestProject.Mappers;
+using TestProject.Models;
 
 namespace TestProject.Controllers
 {
@@ -12,18 +14,22 @@ namespace TestProject.Controllers
     public class UserController : Controller
     {
         private IUserService _userService;
-        public UserController(IUserService userService)
+        private IMapper<ProfileDisplayModel, UserProfile> _profileDisplayMapper;
+
+        public UserController(IUserService userService, 
+            IMapper<ProfileDisplayModel, UserProfile> profileDisplayMapper)
         {
             _userService = userService;
+            _profileDisplayMapper = profileDisplayMapper;
         }
 
         [CustomAuthorizationFilter]
         [Route("getUserProfile")]
-        public async Task<UserProfile> GetUserProfileAsync()
+        public async Task<ProfileDisplayModel> GetUserProfileAsync()
         {
             var userEmail = (User.Identity as ClaimsIdentity).Claims
-            .FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value;
-            return await _userService.GetUserProfileAsync(userEmail);
+                .FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value;
+            return _profileDisplayMapper.ToWebModel(await _userService.GetUserProfileAsync(userEmail));
         }
     }
 }

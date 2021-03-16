@@ -14,23 +14,29 @@ namespace TestProject.Controllers
     public class PostController : ControllerBase
     {
         private IPostService _postService;
+        private IMapper<EditPostModel, BL.Models.EditPostModel> _editPostMapper;
+        private IMapper<PostDisplayModel, BL.Models.PostModel> _displayPostMapper;
 
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, 
+            IMapper<EditPostModel, BL.Models.EditPostModel> editPostMapper,
+            IMapper<PostDisplayModel, BL.Models.PostModel> displayPostMapper)
         {
             _postService = postService;
+            _editPostMapper = editPostMapper;
+            _displayPostMapper = displayPostMapper;
         }
 
         [Route("getAll/{userId?}")]
         public async Task<List<PostDisplayModel>> GetAll([FromRoute] int? userId)
         {
             var posts = await _postService.GetPosts(userId);
-            return posts.Select(PostMapper.MapPostModelToPostModel).ToList();
+            return posts.Select(_displayPostMapper.ToWebModel).ToList();
         }
 
         [Route("/posts/get/{id}")]
         public async Task<EditPostModel> Get([FromRoute] int id)
         {
-            return PostMapper.MapEditPostModelDlToWeb(await _postService.Get(id));
+            return _editPostMapper.ToWebModel(await _postService.Get(id));
         }
 
         [HttpPost]
@@ -42,11 +48,11 @@ namespace TestProject.Controllers
             {
                 if (post.Id == 0)
                 {
-                    await _postService.Create(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
+                    await _postService.Create(_editPostMapper.ToBlModel(post), User.GetEmail());
                 }
                 else
                 {
-                    await _postService.Edit(PostMapper.MapEditPostModelWebToBl(post), User.GetEmail());
+                    await _postService.Edit(_editPostMapper.ToBlModel(post), User.GetEmail());
                 }
                 return Ok();
             }

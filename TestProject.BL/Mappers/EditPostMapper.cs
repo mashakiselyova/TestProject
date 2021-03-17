@@ -19,6 +19,7 @@ namespace TestProject.BL.Mappers
         {
             return new Post
             {
+                Id = post.Id,
                 Title = post.Title,
                 Content = post.Content
             };

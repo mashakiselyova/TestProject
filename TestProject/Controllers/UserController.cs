@@ -29,7 +29,8 @@ namespace TestProject.Controllers
         {
             var userEmail = (User.Identity as ClaimsIdentity).Claims
                 .FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value;
-            return _profileDisplayMapper.ToWebModel(await _userService.GetUserProfileAsync(userEmail));
+            var userProfile = await _userService.GetUserProfileAsync(userEmail);
+            return _profileDisplayMapper.ToWebModel(userProfile);
         }
     }
 }

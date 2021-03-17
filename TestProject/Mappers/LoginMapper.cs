@@ -1,5 +1,4 @@
-﻿using System;
-using TestProject.BL.Models;
+﻿using TestProject.BL.Models;
 using TestProject.Models;
 
 namespace TestProject.Mappers
@@ -18,7 +17,12 @@ namespace TestProject.Mappers
 
         public LoginModel ToWebModel(UserLoginModel model)
         {
-            throw new NotImplementedException();
+            return new LoginModel
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email
+            };
         }
     }
 }

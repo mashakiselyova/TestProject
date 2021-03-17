@@ -20,7 +20,15 @@ namespace TestProject.BL.Mappers
 
         public Post ToDalModel(PostModel post)
         {
-            throw new System.NotImplementedException();
+            return new Post
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                CreateDate = post.CreateDate,
+                UpdateDate = post.UpdateDate,
+                User = post.Author
+            };
         }
     }
 }

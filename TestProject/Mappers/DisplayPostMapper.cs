@@ -20,7 +20,15 @@ namespace TestProject.Mappers
 
         public PostModel ToBlModel(PostDisplayModel post)
         {
-            throw new System.NotImplementedException();
+            return new PostModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                CreateDate = post.CreateDate,
+                UpdateDate = post.UpdateDate,
+                Author = post.Author
+            };
         }        
     }    
 }

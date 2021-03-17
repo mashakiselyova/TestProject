@@ -6,18 +6,23 @@ namespace TestProject.BL.Mappers
 {
     public class UserLoginMapper : IMapper<UserLoginModel, User>
     {
-        public UserLoginModel ToBlModel(User model)
+        public UserLoginModel ToBlModel(User user)
         {
-            throw new NotImplementedException();
+            return new UserLoginModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
+            };
         }
 
-        public User ToDalModel(UserLoginModel model)
+        public User ToDalModel(UserLoginModel user)
         {
             return new User
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
             };
         }
     }

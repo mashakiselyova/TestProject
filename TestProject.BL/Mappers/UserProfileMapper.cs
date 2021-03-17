@@ -1,24 +1,30 @@
-﻿using System;
-using TestProject.BL.Models;
+﻿using TestProject.BL.Models;
 using TestProject.DAL.Models;
 
 namespace TestProject.BL.Mappers
 {
     public class UserProfileMapper : IMapper<UserProfile, User>
     {
-        public UserProfile ToBlModel(User model)
+        public UserProfile ToBlModel(User user)
         {
             return new UserProfile
             {
-                Id = model.Id,
-                Name = $"{model.FirstName} {model.LastName}",
-                Email = model.Email
+                Id = user.Id,
+                Name = $"{user.FirstName} {user.LastName}",
+                Email = user.Email
             };
         }
 
-        public User ToDalModel(UserProfile model)
+        public User ToDalModel(UserProfile profile)
         {
-            throw new NotImplementedException();
+            var name = profile.Name.Split(' ');
+            return new User
+            {
+                Id = profile.Id,
+                FirstName = name[0],
+                LastName = name[1],
+                Email = profile.Email
+            };
         }
     }
 }

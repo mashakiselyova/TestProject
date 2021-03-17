@@ -1,5 +1,4 @@
-﻿using System;
-using TestProject.BL.Models;
+﻿using TestProject.BL.Models;
 using TestProject.Models;
 
 namespace TestProject.Mappers
@@ -8,7 +7,12 @@ namespace TestProject.Mappers
     {
         public UserProfile ToBlModel(ProfileDisplayModel model)
         {
-            throw new NotImplementedException();
+            return new UserProfile
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Email = model.Email
+            };
         }
 
         public ProfileDisplayModel ToWebModel(UserProfile model)

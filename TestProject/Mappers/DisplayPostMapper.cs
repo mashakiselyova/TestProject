@@ -1,11 +1,24 @@
-﻿using TestProject.DAL.Models;
-using TestProject.BL.Models;
+﻿using TestProject.BL.Models;
+using TestProject.Models;
 
-namespace TestProject.BL.Mappers
+namespace TestProject.Mappers
 {
-    public class PostMapper : IMapper<PostModel, Post>
+    public class DisplayPostMapper : IMapper<PostDisplayModel, PostModel>
     {
-        public PostModel ToBlModel(Post post)
+        public PostDisplayModel ToWebModel(PostModel post)
+        {
+            return new PostDisplayModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                CreateDate = post.CreateDate,
+                UpdateDate = post.UpdateDate,
+                Author = post.Author
+            };
+        }
+
+        public PostModel ToBlModel(PostDisplayModel post)
         {
             return new PostModel
             {
@@ -14,21 +27,8 @@ namespace TestProject.BL.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = post.User
+                Author = post.Author
             };
-        }
-
-        public Post ToDalModel(PostModel post)
-        {
-            return new Post
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Content = post.Content,
-                CreateDate = post.CreateDate,
-                UpdateDate = post.UpdateDate,
-                User = post.Author
-            };
-        }
-    }
+        }        
+    }    
 }

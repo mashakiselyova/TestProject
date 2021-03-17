@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
+using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
 
 namespace TestProject.BL.Services
@@ -13,16 +14,22 @@ namespace TestProject.BL.Services
     {
         private IPostRepository _postRepository;
         private IUserRepository _userRepository;
+        private IMapper<EditPostModel, Post> _editPostMapper;
+        private IMapper<PostModel, Post> _postMapper;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository)
+        public PostService(IPostRepository postRepository, IUserRepository userRepository,
+            IMapper<EditPostModel, Post> editPostMapper,
+            IMapper<PostModel, Post> postMapper)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
+            _editPostMapper = editPostMapper;
+            _postMapper = postMapper;
         }
 
         public async Task Create(EditPostModel editPostModel, string userEmail)
         {
-            var post = PostMapper.MapEditPostModelToPost(editPostModel);
+            var post = _editPostMapper.ToDalModel(editPostModel);
             var user = await _userRepository.GetUserByEmail(userEmail);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
@@ -35,16 +42,16 @@ namespace TestProject.BL.Services
             if (userId == null)
             {
                 return (await _postRepository.GetAllPosts())
-                    .Select(PostMapper.MapPostToPostModel).ToList();
+                    .Select(_postMapper.ToBlModel).ToList();
             }
             return (await _postRepository.GetUserPosts(userId.Value))
-                .Select(PostMapper.MapPostToPostModel).ToList();
+                .Select(_postMapper.ToBlModel).ToList();
         }
 
         public async Task<EditPostModel> Get(int id)
         {
             var post = await _postRepository.Get(id);
-            return PostMapper.MapPostToEditPostModel(post);
+            return _editPostMapper.ToBlModel(post);
         }
 
         public async Task Edit(EditPostModel editPostModel, string userEmail)

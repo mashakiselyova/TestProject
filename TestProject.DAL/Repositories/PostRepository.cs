@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using TestProject.DAL.Models;
 
 namespace TestProject.DAL.Repositories
 {
-    public class PostRepository : IPostRepository
+    public class PostRepository : IRepository<Post>
     {
         private ApplicationContext _context;
 
@@ -22,26 +23,20 @@ namespace TestProject.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Post>> GetAllPosts()
+        public async Task<List<Post>> Get()
         {
             return await _context.Posts.Include(p => p.User)
                 .OrderByDescending(p => p.CreateDate).ToListAsync();
         }
 
-        public async Task<List<Post>> GetUserPosts(int id)
-        {
-            return await _context.Posts.Where(p => p.UserId == id).Include(p => p.User)
-                .OrderByDescending(p => p.CreateDate).ToListAsync();
-        }
-
-        public async Task<Post> Get(int id)
+        public async Task<Post> FindById(int id)
         {
             return await _context.Posts.FindAsync(id);
         }
 
         public async Task Delete(int id)
         {
-            var post = await Get(id);
+            var post = await FindById(id);
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
         }
@@ -52,6 +47,10 @@ namespace TestProject.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        
+        public List<Post> Get(Func<Post, bool> predicate)
+        {
+            return _context.Posts.Include(p => p.User).Where(predicate)
+                .OrderByDescending(p => p.CreateDate).ToList();
+        }
     }
 }

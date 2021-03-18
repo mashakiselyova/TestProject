@@ -3,16 +3,18 @@ using System.Threading.Tasks;
 using TestProject.BL.Models;
 using TestProject.BL.Mappers;
 using TestProject.DAL.Models;
+using System.Linq;
+using TestProject.BL.Utils;
 
 namespace TestProject.BL.Services
 {
     public class UserService : IUserService
     {
-        private IUserRepository _userRepository;
+        private IRepository<User> _userRepository;
         private IMapper<UserLoginModel, User> _userLoginMapper;
         private IMapper<UserProfile, User> _userProfileMapper;
 
-        public UserService(IUserRepository repository, 
+        public UserService(IRepository<User> repository, 
             IMapper<UserLoginModel, User> userLoginMapper,
             IMapper<UserProfile, User> userProfileMapper)
         {
@@ -22,7 +24,7 @@ namespace TestProject.BL.Services
         }
         public async Task AddOrUpdateUserAsync(UserLoginModel userLoginModel)
         {
-            if (_userRepository.UserExists(userLoginModel.Email))
+            if (UserExists(userLoginModel.Email))
             {
                 await UpdateAsync(userLoginModel);
             }
@@ -34,7 +36,7 @@ namespace TestProject.BL.Services
 
         public async Task<UserProfile> GetUserProfileAsync(string email)
         {
-            var user = await _userRepository.GetUserByEmail(email);
+            var user = _userRepository.GetByEmail(email);
             return _userProfileMapper.ToBlModel(user);
         }
         
@@ -51,13 +53,18 @@ namespace TestProject.BL.Services
 
         private async Task UpdateAsync(UserLoginModel userLoginModel)
         {
-            var user = await _userRepository.GetUserByEmail(userLoginModel.Email);
+            var user = _userRepository.GetByEmail(userLoginModel.Email);
             if (UserHasChanged(userLoginModel, user))
             {
                 var newUser = _userLoginMapper.ToDalModel(userLoginModel);
                 newUser.Id = user.Id;
                 await _userRepository.Update(newUser);
             }
+        }
+
+        private bool UserExists(string email)
+        {
+            return _userRepository.Get(u => u.Email == email).Count > 0;
         }
     }
 }

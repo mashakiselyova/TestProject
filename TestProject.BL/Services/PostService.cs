@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
+using TestProject.BL.Utils;
 using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
 
@@ -12,12 +13,12 @@ namespace TestProject.BL.Services
 {
     public class PostService : IPostService
     {
-        private IPostRepository _postRepository;
-        private IUserRepository _userRepository;
+        private IRepository<Post> _postRepository;
+        private IRepository<User> _userRepository;
         private IMapper<EditPostModel, Post> _editPostMapper;
         private IMapper<PostModel, Post> _postMapper;
 
-        public PostService(IPostRepository postRepository, IUserRepository userRepository,
+        public PostService(IRepository<Post> postRepository, IRepository<User> userRepository,
             IMapper<EditPostModel, Post> editPostMapper,
             IMapper<PostModel, Post> postMapper)
         {
@@ -30,7 +31,7 @@ namespace TestProject.BL.Services
         public async Task Create(EditPostModel editPostModel, string userEmail)
         {
             var post = _editPostMapper.ToDalModel(editPostModel);
-            var user = await _userRepository.GetUserByEmail(userEmail);
+            var user = _userRepository.GetByEmail(userEmail);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
             post.UpdateDate = DateTime.Now;
@@ -41,34 +42,31 @@ namespace TestProject.BL.Services
         {
             if (userId == null)
             {
-                return (await _postRepository.GetAllPosts())
+                return (await _postRepository.Get())
                     .Select(_postMapper.ToBlModel).ToList();
             }
-            return (await _postRepository.GetUserPosts(userId.Value))
+            return _postRepository.Get(p => p.UserId == userId.Value)
                 .Select(_postMapper.ToBlModel).ToList();
         }
 
         public async Task<EditPostModel> Get(int id)
         {
-            var post = await _postRepository.Get(id);
+            var post = await _postRepository.FindById(id);
             return _editPostMapper.ToBlModel(post);
         }
 
         public async Task Edit(EditPostModel editPostModel, string userEmail)
         {
-            var currentUser = await _userRepository.GetUserByEmail(userEmail);
-            var post = await _postRepository.Get(editPostModel.Id);
-            if (post.UserId == currentUser.Id)
-            {
-                post.Title = editPostModel.Title;
-                post.Content = editPostModel.Content;
-                post.UpdateDate = DateTime.Now;
-                await _postRepository.Update(post);
-            }
-            else
+            var currentUser = _userRepository.GetByEmail(userEmail);
+            var post = await _postRepository.FindById(editPostModel.Id);
+            if (post.UserId != currentUser.Id)
             {
                 throw new EditFailedException();
             }
+            post.Title = editPostModel.Title;
+            post.Content = editPostModel.Content;
+            post.UpdateDate = DateTime.Now;
+            await _postRepository.Update(post);
         }
 
         public async Task Delete(int id)

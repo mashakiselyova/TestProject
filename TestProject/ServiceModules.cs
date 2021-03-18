@@ -34,8 +34,8 @@ namespace TestProject
 
         private static void RegisterRepositories(ContainerBuilder builder)
         {
-            builder.RegisterType<UserRepository>().As<IUserRepository>();
-            builder.RegisterType<PostRepository>().As<IPostRepository>();
+            builder.RegisterType<UserRepository>().As<IRepository<User>>();
+            builder.RegisterType<PostRepository>().As<IRepository<Post>>();
         }
 
         private static void RegisterMappers(ContainerBuilder builder)

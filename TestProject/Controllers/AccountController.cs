@@ -48,7 +48,7 @@ namespace TestProject.Controllers
                 LastName = claims.FirstOrDefault(claim => claim.Type.Contains("surname")).Value,
                 Email = claims.FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value
             };
-            await _userService.AddOrUpdateUserAsync(_loginMapper.ToBlModel(user));
+            await _userService.AddOrUpdate(_loginMapper.ToBlModel(user));
 
             return Redirect("/");
         }

@@ -8,7 +8,7 @@ namespace TestProject.BL.Utils
     {
         public static User GetByEmail(this IRepository<User> repository, string email)
         {
-            return repository.Get(u => u.Email == email).First();
+            return repository.Get(u => u.Email == email).Single();
         }
     }
 }

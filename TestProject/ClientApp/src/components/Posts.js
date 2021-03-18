@@ -10,6 +10,9 @@ function Posts({ userProfile, filterByCurrentUser = false }) {
         fetch(url, { method: 'get', mode: 'no-cors' })
             .then((response) => {
                 response.json().then((data) => {
+                    data.sort((a, b) => {
+                        return new Date(b.createDate) - new Date(a.createDate);
+                    });
                     setPosts(data);
                 });
             }).catch(() => {

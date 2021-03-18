@@ -4,6 +4,7 @@ using TestProject.BL.Models;
 using TestProject.BL.Mappers;
 using TestProject.DAL.Models;
 using System.Linq;
+using TestProject.BL.Utils;
 
 namespace TestProject.BL.Services
 {
@@ -35,7 +36,7 @@ namespace TestProject.BL.Services
 
         public async Task<UserProfile> GetUserProfileAsync(string email)
         {
-            var user = _userRepository.Get(u => u.Email == email).First();
+            var user = _userRepository.GetByEmail(email);
             return _userProfileMapper.ToBlModel(user);
         }
         
@@ -52,7 +53,7 @@ namespace TestProject.BL.Services
 
         private async Task UpdateAsync(UserLoginModel userLoginModel)
         {
-            var user = _userRepository.Get(u => u.Email == userLoginModel.Email).First();
+            var user = _userRepository.GetByEmail(userLoginModel.Email);
             if (UserHasChanged(userLoginModel, user))
             {
                 var newUser = _userLoginMapper.ToDalModel(userLoginModel);

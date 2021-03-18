@@ -25,8 +25,7 @@ namespace TestProject.DAL.Repositories
 
         public async Task<List<Post>> Get()
         {
-            return await _context.Posts.Include(p => p.User)
-                .OrderByDescending(p => p.CreateDate).ToListAsync();
+            return await _context.Posts.Include(p => p.User).ToListAsync();
         }
 
         public async Task<Post> FindById(int id)
@@ -49,8 +48,7 @@ namespace TestProject.DAL.Repositories
 
         public List<Post> Get(Func<Post, bool> predicate)
         {
-            return _context.Posts.Include(p => p.User).Where(predicate)
-                .OrderByDescending(p => p.CreateDate).ToList();
+            return _context.Posts.Include(p => p.User).Where(predicate).ToList();
         }
     }
 }

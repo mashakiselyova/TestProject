@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
+using TestProject.BL.Utils;
 using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
 
@@ -30,7 +31,7 @@ namespace TestProject.BL.Services
         public async Task Create(EditPostModel editPostModel, string userEmail)
         {
             var post = _editPostMapper.ToDalModel(editPostModel);
-            var user = _userRepository.Get(u => u.Email == userEmail).First();
+            var user = _userRepository.GetByEmail(userEmail);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
             post.UpdateDate = DateTime.Now;
@@ -56,19 +57,16 @@ namespace TestProject.BL.Services
 
         public async Task Edit(EditPostModel editPostModel, string userEmail)
         {
-            var currentUser = _userRepository.Get(u => u.Email == userEmail).First();
+            var currentUser = _userRepository.GetByEmail(userEmail);
             var post = await _postRepository.FindById(editPostModel.Id);
-            if (post.UserId == currentUser.Id)
-            {
-                post.Title = editPostModel.Title;
-                post.Content = editPostModel.Content;
-                post.UpdateDate = DateTime.Now;
-                await _postRepository.Update(post);
-            }
-            else
+            if (post.UserId != currentUser.Id)
             {
                 throw new EditFailedException();
             }
+            post.Title = editPostModel.Title;
+            post.Content = editPostModel.Content;
+            post.UpdateDate = DateTime.Now;
+            await _postRepository.Update(post);
         }
 
         public async Task Delete(int id)

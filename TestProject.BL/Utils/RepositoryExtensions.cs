@@ -4,7 +4,7 @@ using TestProject.DAL.Repositories;
 
 namespace TestProject.BL.Utils
 {
-    public static class UserExtensions
+    public static class RepositoryExtensions
     {
         public static User GetByEmail(this IRepository<User> repository, string email)
         {

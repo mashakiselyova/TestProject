@@ -29,14 +29,14 @@ namespace TestProject.Controllers
         [Route("getAll/{userId?}")]
         public async Task<List<PostDisplayModel>> GetAll([FromRoute] int? userId)
         {
-            var posts = await _postService.GetPosts(userId);
+            var posts = await _postService.GetAll(userId);
             return posts.Select(_displayPostMapper.ToWebModel).ToList();
         }
 
         [Route("/posts/get/{id}")]
         public async Task<EditPostModel> Get([FromRoute] int id)
         {
-            return _editPostMapper.ToWebModel(await _postService.Get(id));
+            return _editPostMapper.ToWebModel(await _postService.GetById(id));
         }
 
         [HttpPost]

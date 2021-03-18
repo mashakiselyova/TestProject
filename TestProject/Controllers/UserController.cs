@@ -25,11 +25,11 @@ namespace TestProject.Controllers
 
         [CustomAuthorizationFilter]
         [Route("getUserProfile")]
-        public async Task<ProfileDisplayModel> GetUserProfileAsync()
+        public async Task<ProfileDisplayModel> GetUserProfile()
         {
             var userEmail = (User.Identity as ClaimsIdentity).Claims
                 .FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value;
-            var userProfile = await _userService.GetUserProfileAsync(userEmail);
+            var userProfile = await _userService.GetProfile(userEmail);
             return _profileDisplayMapper.ToWebModel(userProfile);
         }
     }

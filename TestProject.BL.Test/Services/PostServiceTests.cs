@@ -45,7 +45,7 @@ namespace TestProject.BL.Test.Services
 
         [Theory]
         [MemberData(nameof(GetAllData))]
-        public async Task Should_get_posts(int? userId, List<PostModel> expected, Post post, PostModel postModel)
+        public async Task Should_get_filtered_posts(int? userId, List<PostModel> expected, Post post, PostModel postModel)
         {
             _mockPostRepository.Setup(repo => repo.Get(It.IsAny<Func<Post, bool>>())).Returns(new List<Post>() { post });
             _mockPostRepository.Setup(repo => repo.Get()).ReturnsAsync(new List<Post>() { post, post });
@@ -58,7 +58,7 @@ namespace TestProject.BL.Test.Services
 
         [Theory]
         [MemberData(nameof(GetByIdData))]
-        public async Task Should_get_post(int id, EditPostModel expected)
+        public async Task Should_get_specific_post(int id, EditPostModel expected)
         {
             var post = new Post { Id = id };
             var editPostModel = new EditPostModel { Id = id };

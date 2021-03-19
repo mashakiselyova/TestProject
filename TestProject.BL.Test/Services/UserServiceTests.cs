@@ -55,7 +55,7 @@ namespace TestProject.BL.Test.Services
 
         [Theory]
         [MemberData(nameof(GetProfileData))]
-        public async Task When_called_GetProfile_should_return_profile(string email, UserProfile expected)
+        public async Task Should_get_user_profile(string email, UserProfile expected)
         {
             var user = new User { Email = email };
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).Returns(new List<User> { user });

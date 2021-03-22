@@ -47,7 +47,7 @@ namespace TestProject.BL.Services
         /// </summary>
         /// <param name="email">User email</param>
         /// <returns>User profile</returns>
-        public async Task<UserProfile> GetProfile(string email)
+        public UserProfile GetProfile(string email)
         {
             var user = _userRepository.GetByEmail(email);
             return _userProfileMapper.ToBlModel(user);

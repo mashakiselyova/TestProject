@@ -30,12 +30,14 @@ namespace TestProject
         {
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<PostService>().As<IPostService>();
+            builder.RegisterType<RatingService>().As<IRatingService>();
         }
 
         private static void RegisterRepositories(ContainerBuilder builder)
         {
             builder.RegisterType<UserRepository>().As<IRepository<User>>();
             builder.RegisterType<PostRepository>().As<IRepository<Post>>();
+            builder.RegisterType<RatingRepository>().As<IRepository<Rating>>();
         }
 
         private static void RegisterMappers(ContainerBuilder builder)
@@ -48,6 +50,8 @@ namespace TestProject
             builder.RegisterType<ProfileDisplayMapper>().As<Mappers.IMapper<ProfileDisplayModel, UserProfile>>();
             builder.RegisterType<UserLoginMapper>().As<BL.Mappers.IMapper<UserLoginModel, User>>();
             builder.RegisterType<UserProfileMapper>().As<BL.Mappers.IMapper<UserProfile, User>>();
+            builder.RegisterType<SetRatingMapper>().As<Mappers.IMapper<SetRatingModel, RatingModel>>();
+            builder.RegisterType<RatingMapper>().As<BL.Mappers.IMapper<RatingModel, Rating>>();
         }
 
         private void RegisterContext(ContainerBuilder builder)

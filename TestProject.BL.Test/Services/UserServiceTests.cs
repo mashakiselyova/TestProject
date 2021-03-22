@@ -16,15 +16,20 @@ namespace TestProject.BL.Test.Services
     {
         private UserService _userService;
         private Mock<IRepository<User>> _mockUserRepository;
+        private Mock<IRepository<Rating>> _mockRatingRepository;
         private Mock<IMapper<UserLoginModel, User>> _mockUserLoginMapper;
         private Mock<IMapper<UserProfile, User>> _mockUserProfileMapper;
 
         public UserServiceTests()
         {
             _mockUserRepository = new Mock<IRepository<User>>();
+            _mockRatingRepository = new Mock<IRepository<Rating>>();
             _mockUserLoginMapper = new Mock<IMapper<UserLoginModel, User>>();
             _mockUserProfileMapper = new Mock<IMapper<UserProfile, User>>();
-            _userService = new UserService(_mockUserRepository.Object, _mockUserLoginMapper.Object, _mockUserProfileMapper.Object);
+            _userService = new UserService(_mockUserRepository.Object, 
+                _mockRatingRepository.Object, 
+                _mockUserLoginMapper.Object, 
+                _mockUserProfileMapper.Object);
         }
 
         [Fact]
@@ -58,7 +63,9 @@ namespace TestProject.BL.Test.Services
         public void Should_get_user_profile(string email, UserProfile expected)
         {
             var user = new User { Email = email };
+            var rating = new Rating();
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).Returns(new List<User> { user });
+            _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<Rating, bool>>())).Returns(new List<Rating> { rating });
             _mockUserProfileMapper.Setup(mapper => mapper.ToBlModel(user)).Returns(new UserProfile { Email = email });
 
             var result = _userService.GetProfile(email);
@@ -69,7 +76,7 @@ namespace TestProject.BL.Test.Services
         public static IEnumerable<object[]> GetProfileData =>
             new List<object[]>
             {
-                new object[] { "bla@bla.com", new UserProfile { Email = "bla@bla.com" } }
+                new object[] { "bla@bla.com", new UserProfile { Email = "bla@bla.com", Rating = 1 } }
             };
     }
 }

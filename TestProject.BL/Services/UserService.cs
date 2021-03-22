@@ -5,6 +5,7 @@ using TestProject.BL.Mappers;
 using TestProject.DAL.Models;
 using System.Linq;
 using TestProject.BL.Utils;
+using TestProject.DAL.Enums;
 
 namespace TestProject.BL.Services
 {
@@ -14,14 +15,17 @@ namespace TestProject.BL.Services
     public class UserService : IUserService
     {
         private IRepository<User> _userRepository;
+        private IRepository<Rating> _ratingRepository;
         private IMapper<UserLoginModel, User> _userLoginMapper;
         private IMapper<UserProfile, User> _userProfileMapper;
 
-        public UserService(IRepository<User> repository, 
+        public UserService(IRepository<User> repository,
+            IRepository<Rating> ratingRepository,
             IMapper<UserLoginModel, User> userLoginMapper,
             IMapper<UserProfile, User> userProfileMapper)
         {
             _userRepository = repository;
+            _ratingRepository = ratingRepository;
             _userLoginMapper = userLoginMapper;
             _userProfileMapper = userProfileMapper;
         }
@@ -50,7 +54,9 @@ namespace TestProject.BL.Services
         public UserProfile GetProfile(string email)
         {
             var user = _userRepository.GetByEmail(email);
-            return _userProfileMapper.ToBlModel(user);
+            var userProfile = _userProfileMapper.ToBlModel(user);
+            userProfile.Rating = CalculateRating(user.Id);
+            return userProfile;
         }
         
         /// <summary>
@@ -96,6 +102,14 @@ namespace TestProject.BL.Services
         private bool DoesExist(string email)
         {
             return _userRepository.Get(u => u.Email == email).SingleOrDefault() != null;
+        }
+
+        private int CalculateRating(int userId)
+        {
+            var ratings = _ratingRepository.Get(r => r.Post.UserId == userId);
+            var pluses = ratings.Where(r => r.Value == RatingValue.Plus).ToList().Count();
+            var minuses = ratings.Where(r => r.Value == RatingValue.Minus).ToList().Count();
+            return pluses - minuses;
         }
     }
 }

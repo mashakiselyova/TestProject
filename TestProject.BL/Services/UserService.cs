@@ -104,6 +104,11 @@ namespace TestProject.BL.Services
             return _userRepository.Get(u => u.Email == email).SingleOrDefault() != null;
         }
 
+        /// <summary>
+        /// Calculates user's rating
+        /// </summary>
+        /// <param name="userId">User Id</param>
+        /// <returns>Rating</returns>
         private int CalculateRating(int userId)
         {
             var ratings = _ratingRepository.Get(r => r.Post.UserId == userId);

@@ -2,7 +2,8 @@
 {
     public enum RatingValue
     {
-        Plus,
-        Minus
+        Unrated = 0,
+        Plus = 1,
+        Minus = 2
     }
 }

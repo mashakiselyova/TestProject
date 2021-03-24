@@ -1,18 +1,10 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React from 'react';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
+import { unrated, plus, minus } from "../ratingValues"
 
-function Rating({ postId, userProfile, authorId }) {
-    const [rated, setRated] = useState(false);
-    const [rating, setRating] = useState(0);
-
-    useEffect(() => {
-        if (userProfile.id !== authorId) {
-            checkIfRatedByCurrentUser();
-        }
-        getRating();
-    }, [userProfile])
+function Rating({ postId, userProfile, authorId, selectedRating, totalRating }) {
 
     function handleSetRating(value) {
         fetch("/rating/set", {
@@ -20,56 +12,33 @@ function Rating({ postId, userProfile, authorId }) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ postId, value })
+            body: JSON.stringify({ postId, value, authorId })
         }).then((response) => {
-            if (response.status === 200) {
-                setRated(true);
-            }
-            else {
+            if (response.status !== 200) {
                 NotificationManager.error("Couldn't set rating");
             }
         }).catch(() => {
             NotificationManager.error("Couldn't set rating");
         });
-    } 
-
-    function checkIfRatedByCurrentUser() {
-        if (userProfile.loggedIn) {
-            fetch(`rating/check/${postId}`)
-                .then((response) => {
-                    response.json().then((data) => {
-                        setRated(data);
-                    });
-                }).catch(() => {
-                    NotificationManager.error("Couldn't check rating");
-                });
-        }
-    };
-
-    function getRating() {
-        fetch(`rating/get/${postId}`)
-            .then((response) => {
-                response.json().then((data) => {
-                    setRating(data);
-                });
-            }).catch(() => {
-                NotificationManager.error("Couldn't get rating");
-            });
     }
+
+    const thumbsUpStyles = { cursor: "pointer", marginBottom: 5, color: selectedRating === plus ? "red" : "black" };
+    const thumbsDownStyles = { cursor: "pointer", color: selectedRating === minus ? "red" : "black" };
+    const userIsNotAuthor = userProfile.loggedIn && userProfile.id !== authorId;
 
     return (
         <div>
-            <div>{rating}</div>
-            {userProfile.loggedIn && userProfile.id !== authorId && !rated
-                && <div>
+            <div>{totalRating}</div>
+            {userIsNotAuthor &&
+                <div>
                     <FontAwesomeIcon
-                        style={{ cursor: "pointer", marginBottom: 5 }}
-                        onClick={() => handleSetRating(0)}
+                        style={thumbsUpStyles}
+                        onClick={() => handleSetRating(plus)}
                         icon={faThumbsUp}
                         size="lg" />
-                    <FontAwesomeIcon s
-                        tyle={{ cursor: "pointer" }}
-                        onClick={() => handleSetRating(1)}
+                    <FontAwesomeIcon
+                        style={thumbsDownStyles}
+                        onClick={() => handleSetRating(minus)}
                         icon={faThumbsDown}
                         size="lg" />
                 </div>

@@ -27,7 +27,13 @@ function Post({ post, userProfile }) {
             <h5 className="card-header">{post.author.firstName + ' ' + post.author.lastName}</h5>
             <div className="card-body row">
                 <div className="col-1">
-                    <Rating postId={post.id} userProfile={userProfile} authorId={post.author.id} />
+                    <Rating
+                        postId={post.id}
+                        userProfile={userProfile}
+                        authorId={post.author.id}
+                        selectedRating={post.selectedRating}
+                        totalRating={post.totalRating}
+                    />
                 </div>
                 <div className="col">
                     <h5 className="card-title">{post.title}</h5>

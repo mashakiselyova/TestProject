@@ -14,7 +14,8 @@ namespace TestProject.BL.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = post.User
+                Author = post.User,
+                Ratings = post.Ratings
             };
         }
 

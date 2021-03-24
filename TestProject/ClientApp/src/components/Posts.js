@@ -18,7 +18,7 @@ function Posts({ userProfile, filterByCurrentUser = false }) {
             }).catch(() => {
                 NotificationManager.error("Couldn't get posts");
             });
-    }, [userProfile, filterByCurrentUser])
+    }, [userProfile, filterByCurrentUser, posts])
 
     return (
         <div>

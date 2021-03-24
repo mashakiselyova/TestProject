@@ -2,10 +2,12 @@
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
+using TestProject.DAL.Enums;
 using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
 using Xunit;
@@ -50,7 +52,9 @@ namespace TestProject.BL.Test.Services
         {
             var userLoginModel = new UserLoginModel { FirstName = "Bla" };
             var user = new User();
-            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).Returns(new List<User> { user });
+            var users = new List<User>() { user };
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
             _mockUserLoginMapper.Setup(mapper => mapper.ToDalModel(userLoginModel)).Returns(user);
 
             await _userService.AddOrUpdate(userLoginModel);
@@ -63,8 +67,10 @@ namespace TestProject.BL.Test.Services
         public void Should_get_user_profile(string email, UserProfile expected)
         {
             var user = new User { Email = email };
-            var rating = new Rating();
-            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).Returns(new List<User> { user });
+            var users = new List<User>() { user };
+            var rating = new Rating() { Value = RatingValue.Plus };
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
             _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<Rating, bool>>())).Returns(new List<Rating> { rating });
             _mockUserProfileMapper.Setup(mapper => mapper.ToBlModel(user)).Returns(new UserProfile { Email = email });
 

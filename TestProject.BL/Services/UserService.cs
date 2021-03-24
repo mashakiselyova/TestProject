@@ -112,8 +112,8 @@ namespace TestProject.BL.Services
         private int CalculateRating(int userId)
         {
             var ratings = _ratingRepository.Get(r => r.Post.UserId == userId);
-            var pluses = ratings.Where(r => r.Value == RatingValue.Plus).ToList().Count();
-            var minuses = ratings.Where(r => r.Value == RatingValue.Minus).ToList().Count();
+            var pluses = ratings.Where(r => r.Value == RatingValue.Plus).ToArray().Length;
+            var minuses = ratings.Where(r => r.Value == RatingValue.Minus).ToArray().Length;
             return pluses - minuses;
         }
     }

@@ -14,7 +14,9 @@ namespace TestProject.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = post.Author
+                Author = post.Author,
+                SelectedRating = post.SelectedRating,
+                TotalRating = post.TotalRating
             };
         }
 
@@ -27,7 +29,9 @@ namespace TestProject.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = post.Author
+                Author = post.Author,
+                SelectedRating = post.SelectedRating,
+                TotalRating = post.TotalRating
             };
         }        
     }    

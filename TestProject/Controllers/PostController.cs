@@ -29,7 +29,7 @@ namespace TestProject.Controllers
         [Route("getAll/{userId?}")]
         public async Task<List<PostDisplayModel>> GetAll([FromRoute] int? userId)
         {
-            var posts = await _postService.GetAll(userId);
+            var posts = await _postService.GetAll(userId, User.Identity.IsAuthenticated ? User.GetEmail() : null);
             return posts.Select(_displayPostMapper.ToWebModel).ToList();
         }
 

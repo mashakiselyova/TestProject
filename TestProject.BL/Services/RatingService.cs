@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using TestProject.BL.Enums;
 using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
@@ -14,14 +15,17 @@ namespace TestProject.BL.Services
     {
         private IRepository<Rating> _ratingRepository;
         private IRepository<User> _userRepository;
+        private IRepository<Post> _postRepository;
         private IMapper<RatingModel, Rating> _ratingMapper;
 
         public RatingService(IRepository<Rating> ratingRepository, 
-            IRepository<User> userRepository, 
+            IRepository<User> userRepository,
+            IRepository<Post> postRepository,
             IMapper<RatingModel, Rating> ratingMapper)
         {
             _ratingRepository = ratingRepository;
             _userRepository = userRepository;
+            _postRepository = postRepository;
             _ratingMapper = ratingMapper;
         }
 
@@ -33,12 +37,13 @@ namespace TestProject.BL.Services
         public async Task Set(RatingModel ratingModel, string email)
         {
             var userId = _userRepository.GetByEmail(email).Id;
-            if (ratingModel.AuthorId == userId)
+            var authorId = (await _postRepository.FindById(ratingModel.PostId)).UserId;
+            if (authorId == userId)
             {
-                throw new RatingFailedException();
+                throw new RatingFailedException("Author cannot set rating");
             }
             var ratingByCurrentUser = GetRatingByUser(userId, ratingModel.PostId);
-            if (ratingByCurrentUser == ratingModel.Value)
+            if (ratingByCurrentUser == (RatingValue)ratingModel.Value)
             {
                 await Delete(userId, ratingModel.PostId);
             }
@@ -46,6 +51,35 @@ namespace TestProject.BL.Services
             {
                 await CreateOrUpdate(ratingModel, userId, ratingByCurrentUser);
             }
+        }
+
+        /// <summary>
+        /// Gets total rating and rating by current user
+        /// </summary>
+        /// <param name="postId">Post Id</param>
+        /// <param name="email">Current user email</param>
+        /// <returns>UpdateRatingModel</returns>
+        public UpdateRatingModel GetUpdatedRating(int postId, string email)
+        {
+            var userId = _userRepository.GetByEmail(email).Id;
+            var ratingByCurrentUser = GetRatingByUser(userId, postId);
+            var totalRating = GetTotalRating(postId);
+            return new UpdateRatingModel
+            {
+                TotalRating = totalRating,
+                RatingByCurrentUser = (RatingOption)ratingByCurrentUser
+            };
+        }
+
+        /// <summary>
+        /// Gets total rating for post
+        /// </summary>
+        /// <param name="postId">Post Id</param>
+        /// <returns>Total Rating</returns>
+        private int GetTotalRating(int postId)
+        {
+            var ratings = _ratingRepository.Get(r => r.PostId == postId);
+            return RatingHelper.CalculateRating(ratings);
         }
 
         /// <summary>
@@ -74,7 +108,7 @@ namespace TestProject.BL.Services
         private async Task Update(RatingModel ratingModel, int userId)
         {
             var rating = _ratingRepository.Get(r => r.PostId == ratingModel.PostId && r.UserId == userId).Single();
-            rating.Value = ratingModel.Value;
+            rating.Value = (RatingValue)ratingModel.Value;
             await _ratingRepository.Update(rating);
         }
 
@@ -99,14 +133,7 @@ namespace TestProject.BL.Services
         private RatingValue GetRatingByUser(int userId, int postId)
         {
             var ratings = _ratingRepository.Get(r => r.PostId == postId && r.UserId == userId);
-            if (ratings.Count == 0)
-            {
-                return RatingValue.Unrated;
-            }
-            else
-            {
-                return ratings.Single().Value;
-            }
+            return ratings.Count == 0 ? RatingValue.Unrated : ratings.Single().Value;
         }
 
         /// <summary>

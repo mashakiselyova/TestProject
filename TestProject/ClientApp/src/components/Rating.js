@@ -2,17 +2,17 @@
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
-import { unrated, plus, minus } from "../ratingValues"
+import { PLUS, MINUS } from "../ratingValues"
 
-function Rating({ postId, userProfile, authorId, selectedRating, totalRating }) {
+function Rating({ postId, userProfile, authorId, selectedRating, totalRating, updateRating }) {
 
-    function handleSetRating(value) {
-        fetch("/rating/set", {
+    async function handleSetRating(value) {
+        await fetch("/rating/set", {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ postId, value, authorId })
+            body: JSON.stringify({ postId, value })
         }).then((response) => {
             if (response.status !== 200) {
                 NotificationManager.error("Couldn't set rating");
@@ -20,10 +20,11 @@ function Rating({ postId, userProfile, authorId, selectedRating, totalRating }) 
         }).catch(() => {
             NotificationManager.error("Couldn't set rating");
         });
+        updateRating(postId);
     }
 
-    const thumbsUpStyles = { cursor: "pointer", marginBottom: 5, color: selectedRating === plus ? "red" : "black" };
-    const thumbsDownStyles = { cursor: "pointer", color: selectedRating === minus ? "red" : "black" };
+    const thumbsUpStyles = { cursor: "pointer", marginBottom: 5, color: selectedRating === PLUS ? "red" : "black" };
+    const thumbsDownStyles = { cursor: "pointer", color: selectedRating === MINUS ? "red" : "black" };
     const userIsNotAuthor = userProfile.loggedIn && userProfile.id !== authorId;
 
     return (
@@ -33,12 +34,12 @@ function Rating({ postId, userProfile, authorId, selectedRating, totalRating }) 
                 <div>
                     <FontAwesomeIcon
                         style={thumbsUpStyles}
-                        onClick={() => handleSetRating(plus)}
+                        onClick={() => handleSetRating(PLUS)}
                         icon={faThumbsUp}
                         size="lg" />
                     <FontAwesomeIcon
                         style={thumbsDownStyles}
-                        onClick={() => handleSetRating(minus)}
+                        onClick={() => handleSetRating(MINUS)}
                         icon={faThumbsDown}
                         size="lg" />
                 </div>

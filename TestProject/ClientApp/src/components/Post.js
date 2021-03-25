@@ -5,7 +5,7 @@ import 'react-notifications/lib/notifications.css';
 import ConfirmDelete from "./ConfirmDelete";
 import Rating from "./Rating";
 
-function Post({ post, userProfile }) {
+function Post({ post, userProfile, updateRating }) {
 
     function handleDelete() {
         fetch(`/posts/delete/${post.id}`, {
@@ -33,6 +33,7 @@ function Post({ post, userProfile }) {
                         authorId={post.author.id}
                         selectedRating={post.selectedRating}
                         totalRating={post.totalRating}
+                        updateRating={updateRating}
                     />
                 </div>
                 <div className="col">

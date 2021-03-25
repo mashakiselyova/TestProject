@@ -132,10 +132,10 @@ namespace TestProject.BL.Test.Services
                     1,
                     new List<PostModel>
                     {
-                        new PostModel { Author = new User { Id = 1 } , Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
+                        new PostModel { Author = new Author { Id = 1 } , Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
                     },
                     new Post() { User = new User { Id = 1 }, Ratings = new List<Rating>() { new Rating() { UserId = 2 } } },
-                    new PostModel { Author = new User { Id = 1 }, Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
+                    new PostModel { Author = new Author { Id = 1 }, Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
                 }
             };
 

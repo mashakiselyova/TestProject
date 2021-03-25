@@ -1,6 +1,6 @@
 ﻿using System;
-using TestProject.DAL.Enums;
-using TestProject.DAL.Models;
+using TestProject.BL.Enums;
+using TestProject.BL.Models;
 
 namespace TestProject.Models
 {
@@ -11,8 +11,8 @@ namespace TestProject.Models
         public string Content { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
-        public User Author { get; set; }
-        public RatingValue SelectedRating { get; set; }
+        public Author Author { get; set; }
+        public RatingOption SelectedRating { get; set; }
         public int TotalRating { get; set; }
     }
 }

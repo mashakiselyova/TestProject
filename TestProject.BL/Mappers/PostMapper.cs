@@ -14,7 +14,13 @@ namespace TestProject.BL.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = post.User,
+                Author = new Author
+                {
+                    Id = post.User.Id,
+                    FirstName = post.User.FirstName,
+                    LastName = post.User.LastName,
+                    Email = post.User.Email
+                },
                 Ratings = post.Ratings
             };
         }
@@ -28,7 +34,13 @@ namespace TestProject.BL.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                User = post.Author
+                User = new User
+                {
+                    Id = post.Author.Id,
+                    FirstName = post.Author.FirstName,
+                    LastName = post.Author.LastName,
+                    Email = post.Author.Email
+                }
             };
         }
     }

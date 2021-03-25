@@ -1,4 +1,6 @@
-﻿using TestProject.BL.Models;
+﻿using TestProject.BL.Enums;
+using TestProject.BL.Models;
+using TestProject.DAL.Enums;
 using TestProject.DAL.Models;
 
 namespace TestProject.BL.Mappers
@@ -9,7 +11,7 @@ namespace TestProject.BL.Mappers
         {
             return new RatingModel
             {
-                Value = rating.Value,
+                Value = (RatingOption)rating.Value,
                 PostId = rating.PostId
             };
         }
@@ -18,7 +20,7 @@ namespace TestProject.BL.Mappers
         {
             return new Rating
             {
-                Value = rating.Value,
+                Value = (RatingValue)rating.Value,
                 PostId = rating.PostId
             };
         }

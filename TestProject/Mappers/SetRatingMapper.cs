@@ -10,8 +10,7 @@ namespace TestProject.Mappers
             return new RatingModel
             {
                 Value = model.Value,
-                PostId = model.PostId,
-                AuthorId = model.AuthorId
+                PostId = model.PostId
             };
         }
 
@@ -20,8 +19,7 @@ namespace TestProject.Mappers
             return new SetRatingModel
             {
                 Value = model.Value,
-                PostId = model.PostId,
-                AuthorId = model.AuthorId
+                PostId = model.PostId
             };
         }
     }

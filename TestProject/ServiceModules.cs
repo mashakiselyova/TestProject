@@ -52,6 +52,7 @@ namespace TestProject
             builder.RegisterType<UserProfileMapper>().As<BL.Mappers.IMapper<UserProfile, User>>();
             builder.RegisterType<SetRatingMapper>().As<Mappers.IMapper<SetRatingModel, RatingModel>>();
             builder.RegisterType<RatingMapper>().As<BL.Mappers.IMapper<RatingModel, Rating>>();
+            builder.RegisterType<UpdateRatingMapper>().As<Mappers.IMapper<Models.UpdateRatingModel, BL.Models.UpdateRatingModel>>();
         }
 
         private void RegisterContext(ContainerBuilder builder)

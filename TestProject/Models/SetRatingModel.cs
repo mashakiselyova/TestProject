@@ -1,11 +1,10 @@
-﻿using TestProject.DAL.Enums;
+﻿using TestProject.BL.Enums;
 
 namespace TestProject.Models
 {
     public class SetRatingModel
     {
-        public RatingValue Value { get; set; }
+        public RatingOption Value { get; set; }
         public int PostId { get; set; }
-        public int AuthorId { get; set; }
     }
 }

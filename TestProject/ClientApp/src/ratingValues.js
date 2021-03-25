@@ -1,3 +1,2 @@
-﻿export const unrated = 0;
-export const plus = 1;
-export const minus = 2;
+﻿export const PLUS = 1;
+export const MINUS = 2;

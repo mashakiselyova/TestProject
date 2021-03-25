@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestProject.BL.Enums;
 using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
@@ -128,9 +129,7 @@ namespace TestProject.BL.Services
         {
             foreach (var post in postModelList)
             {
-                var pluses = post.Ratings.Where(r => r.Value == RatingValue.Plus).ToArray().Length;
-                var minuses = post.Ratings.Where(r => r.Value == RatingValue.Minus).ToArray().Length;
-                post.TotalRating = pluses - minuses;
+                post.TotalRating = RatingHelper.CalculateRating(post.Ratings);
             }
         }
 
@@ -144,7 +143,8 @@ namespace TestProject.BL.Services
             foreach (var post in postModelList)
             {
                 var selectedRating = post.Ratings.Where(r => r.UserId == currentUserId).SingleOrDefault();
-                post.SelectedRating = selectedRating != null ? selectedRating.Value : RatingValue.Unrated;
+                post.SelectedRating = selectedRating == null 
+                    ? RatingOption.Unrated : (RatingOption)selectedRating.Value;
             }
         }
     }

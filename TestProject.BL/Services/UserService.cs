@@ -5,7 +5,6 @@ using TestProject.BL.Mappers;
 using TestProject.DAL.Models;
 using System.Linq;
 using TestProject.BL.Utils;
-using TestProject.DAL.Enums;
 
 namespace TestProject.BL.Services
 {
@@ -112,9 +111,7 @@ namespace TestProject.BL.Services
         private int CalculateRating(int userId)
         {
             var ratings = _ratingRepository.Get(r => r.Post.UserId == userId);
-            var pluses = ratings.Where(r => r.Value == RatingValue.Plus).ToArray().Length;
-            var minuses = ratings.Where(r => r.Value == RatingValue.Minus).ToArray().Length;
-            return pluses - minuses;
+            return RatingHelper.CalculateRating(ratings);
         }
     }
 }

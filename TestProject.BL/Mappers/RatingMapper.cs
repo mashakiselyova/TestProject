@@ -11,7 +11,7 @@ namespace TestProject.BL.Mappers
         {
             return new RatingModel
             {
-                Value = (RatingOption)rating.Value,
+                Value = (RatingButtonPosition)rating.Value,
                 PostId = rating.PostId
             };
         }

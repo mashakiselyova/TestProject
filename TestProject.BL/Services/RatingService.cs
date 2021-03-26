@@ -30,7 +30,9 @@ namespace TestProject.BL.Services
         }
 
         /// <summary>
-        /// Sets post's rating
+        /// Creates rating if it doesn't exist
+        /// Updates rating if it has changed
+        /// Deletes rating if it was cancelled
         /// </summary>
         /// <param name="ratingModel">Rating</param>
         /// <param name="email">User email</param>
@@ -43,19 +45,6 @@ namespace TestProject.BL.Services
                 throw new RatingFailedException("Author cannot set rating");
             }
             var ratingByCurrentUser = GetRatingByUser(userId, ratingModel.PostId);
-            await ProcessRatingSet(ratingModel, userId, ratingByCurrentUser);
-        }
-
-        /// <summary>
-        /// Creates rating if it doesn't exist
-        /// Updates rating if it has changed
-        /// Deletes rating if it was cancelled
-        /// </summary>
-        /// <param name="ratingModel">Rating model</param>
-        /// <param name="userId">Current user Id</param>
-        /// <param name="ratingByCurrentUser">Rating by current user</param>
-        private async Task ProcessRatingSet(RatingModel ratingModel, int userId, Rating ratingByCurrentUser)
-        {
             if (ratingByCurrentUser == null)
             {
                 await Create(ratingModel, userId);
@@ -69,7 +58,7 @@ namespace TestProject.BL.Services
                 ratingByCurrentUser.Value = (RatingValue)ratingModel.Value;
                 await _ratingRepository.Update(ratingByCurrentUser);
             }
-        }
+        }        
 
         /// <summary>
         /// Gets total rating and rating by current user
@@ -86,7 +75,7 @@ namespace TestProject.BL.Services
             {
                 TotalRating = totalRating,
                 RatingByCurrentUser = ratingByCurrentUser == null 
-                    ? RatingOption.Unrated : (RatingOption)ratingByCurrentUser.Value
+                    ? RatingButtonPosition.Unrated : (RatingButtonPosition)ratingByCurrentUser.Value
             };
         }
 

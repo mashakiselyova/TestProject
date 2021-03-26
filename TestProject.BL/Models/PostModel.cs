@@ -13,7 +13,7 @@ namespace TestProject.BL.Models
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public Author Author { get; set; }
-        public RatingOption SelectedRating { get; set; }
+        public RatingButtonPosition SelectedRating { get; set; }
         public int TotalRating { get; set; }
         public List<Rating> Ratings { get; set; }
     }

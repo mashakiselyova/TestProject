@@ -144,7 +144,7 @@ namespace TestProject.BL.Services
             {
                 var selectedRating = post.Ratings.Where(r => r.UserId == currentUserId).SingleOrDefault();
                 post.SelectedRating = selectedRating == null 
-                    ? RatingOption.Unrated : (RatingOption)selectedRating.Value;
+                    ? RatingButtonPosition.Unrated : (RatingButtonPosition)selectedRating.Value;
             }
         }
     }

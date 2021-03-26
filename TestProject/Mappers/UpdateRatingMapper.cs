@@ -1,4 +1,6 @@
-﻿using TestProject.Models;
+﻿using TestProject.BL.Enums;
+using TestProject.Enums;
+using TestProject.Models;
 
 namespace TestProject.Mappers
 {
@@ -9,7 +11,7 @@ namespace TestProject.Mappers
             return new BL.Models.UpdateRatingModel
             {
                 TotalRating = model.TotalRating,
-                RatingByCurrentUser = model.RatingByCurrentUser
+                RatingByCurrentUser = (RatingButtonPosition)model.RatingByCurrentUser
             };
         }
 
@@ -18,7 +20,7 @@ namespace TestProject.Mappers
             return new UpdateRatingModel
             {
                 TotalRating = model.TotalRating,
-                RatingByCurrentUser = model.RatingByCurrentUser
+                RatingByCurrentUser = (ButtonPosition)model.RatingByCurrentUser
             };
         }
     }

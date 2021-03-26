@@ -1,4 +1,6 @@
-﻿using TestProject.BL.Models;
+﻿using TestProject.BL.Enums;
+using TestProject.BL.Models;
+using TestProject.Enums;
 using TestProject.Models;
 
 namespace TestProject.Mappers
@@ -14,8 +16,14 @@ namespace TestProject.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = post.Author,
-                SelectedRating = post.SelectedRating,
+                Author = new Models.Author
+                {
+                    Id = post.Author.Id,
+                    FirstName = post.Author.FirstName,
+                    LastName = post.Author.LastName,
+                    Email = post.Author.Email
+                },
+                SelectedRating = (ButtonPosition)post.SelectedRating,
                 TotalRating = post.TotalRating
             };
         }
@@ -29,8 +37,14 @@ namespace TestProject.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = post.Author,
-                SelectedRating = post.SelectedRating,
+                Author = new BL.Models.Author
+                {
+                    Id = post.Author.Id,
+                    FirstName = post.Author.FirstName,
+                    LastName = post.Author.LastName,
+                    Email = post.Author.Email
+                },
+                SelectedRating = (RatingButtonPosition)post.SelectedRating,
                 TotalRating = post.TotalRating
             };
         }        

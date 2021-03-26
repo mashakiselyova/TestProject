@@ -5,6 +5,6 @@ namespace TestProject.BL.Models
     public class UpdateRatingModel
     {
         public int TotalRating { get; set; }
-        public RatingOption RatingByCurrentUser { get; set; }
+        public RatingButtonPosition RatingByCurrentUser { get; set; }
     }
 }

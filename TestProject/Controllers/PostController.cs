@@ -7,6 +7,8 @@ using TestProject.Filters;
 using TestProject.Mappers;
 using TestProject.Models;
 using TestProject.Utils;
+using TestProject.BL.Exceptions;
+using System;
 
 namespace TestProject.Controllers
 {
@@ -34,9 +36,20 @@ namespace TestProject.Controllers
         }
 
         [Route("/posts/get/{id}")]
-        public async Task<EditPostModel> Get([FromRoute] int id)
+        public async Task<ActionResult<EditPostModel>> Get([FromRoute] int id)
         {
-            return _editPostMapper.ToWebModel(await _postService.GetById(id));
+            try
+            {
+                return _editPostMapper.ToWebModel(await _postService.GetById(id));
+            }
+            catch(PostNotFoundException)
+            {
+                return StatusCode(404);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         [HttpPost]

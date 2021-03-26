@@ -73,6 +73,10 @@ namespace TestProject.BL.Services
         public async Task<EditPostModel> GetById(int id)
         {
             var post = await _postRepository.FindById(id);
+            if (post == null)
+            {
+                throw new PostNotFoundException();
+            }
             return _editPostMapper.ToBlModel(post);
         }
 

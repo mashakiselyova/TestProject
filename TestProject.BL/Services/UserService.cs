@@ -5,6 +5,8 @@ using TestProject.BL.Mappers;
 using TestProject.DAL.Models;
 using System.Linq;
 using TestProject.BL.Utils;
+using System;
+using TestProject.BL.Exceptions;
 
 namespace TestProject.BL.Services
 {
@@ -52,10 +54,17 @@ namespace TestProject.BL.Services
         /// <returns>User profile</returns>
         public UserProfile GetProfile(string email)
         {
-            var user = _userRepository.GetByEmail(email);
-            var userProfile = _userProfileMapper.ToBlModel(user);
-            userProfile.Rating = CalculateRating(user.Id);
-            return userProfile;
+            try
+            {
+                var user = _userRepository.GetByEmail(email);
+                var userProfile = _userProfileMapper.ToBlModel(user);
+                userProfile.Rating = CalculateRating(user.Id);
+                return userProfile;
+            }
+            catch (InvalidOperationException)
+            {
+                throw new UserNotFoundException();
+            }            
         }
         
         /// <summary>

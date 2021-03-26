@@ -77,6 +77,14 @@ namespace TestProject.BL.Test.Services
         }
 
         [Fact]
+        public async Task If_post_does_not_exist_should_throw_exception()
+        {
+            _mockPostRepository.Setup(repo => repo.FindById(1)).ReturnsAsync((Post)null);
+
+            await Assert.ThrowsAsync<PostNotFoundException>(async () => await _postService.GetById(1));
+        }
+
+        [Fact]
         public async Task When_author_is_current_user_should_update_post()
         {
             var userId = 1;

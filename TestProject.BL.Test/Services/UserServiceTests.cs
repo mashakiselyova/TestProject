@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
@@ -77,6 +78,16 @@ namespace TestProject.BL.Test.Services
             var result = _userService.GetProfile(email);
 
             result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void If_user_does_not_exist_should_throw_exception()
+        {
+            var users = new List<User>();
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
+
+            Assert.Throws<UserNotFoundException>(() => _userService.GetProfile("email"));
         }
 
         public static IEnumerable<object[]> GetProfileData =>

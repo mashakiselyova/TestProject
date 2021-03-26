@@ -35,10 +35,10 @@ namespace TestProject.BL.Services
         /// Deletes rating if it was cancelled
         /// </summary>
         /// <param name="ratingModel">Rating</param>
-        /// <param name="email">User email</param>
-        public async Task Set(RatingModel ratingModel, string email)
+        /// <param name="currentUserEmail">Current user email</param>
+        public async Task Set(RatingModel ratingModel, string currentUserEmail)
         {
-            var userId = _userRepository.GetByEmail(email).Id;
+            var userId = _userRepository.GetByEmail(currentUserEmail).Id;
             var authorId = (await _postRepository.FindById(ratingModel.PostId)).UserId;
             if (authorId == userId)
             {
@@ -64,11 +64,11 @@ namespace TestProject.BL.Services
         /// Gets total rating and rating by current user
         /// </summary>
         /// <param name="postId">Post Id</param>
-        /// <param name="email">Current user email</param>
+        /// <param name="currentUserEmail">Current user email</param>
         /// <returns>UpdateRatingModel</returns>
-        public UpdateRatingModel GetUpdatedRating(int postId, string email)
+        public UpdateRatingModel GetUpdatedRating(int postId, string currentUserEmail)
         {
-            var userId = _userRepository.GetByEmail(email).Id;
+            var userId = _userRepository.GetByEmail(currentUserEmail).Id;
             var ratingByCurrentUser = GetRatingByUser(userId, postId);
             var totalRating = GetTotalRating(postId);
             return new UpdateRatingModel

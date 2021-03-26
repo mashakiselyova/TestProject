@@ -43,13 +43,31 @@ namespace TestProject.BL.Services
                 throw new RatingFailedException("Author cannot set rating");
             }
             var ratingByCurrentUser = GetRatingByUser(userId, ratingModel.PostId);
-            if (ratingByCurrentUser == (RatingValue)ratingModel.Value)
+            await ProcessRatingSet(ratingModel, userId, ratingByCurrentUser);
+        }
+
+        /// <summary>
+        /// Creates rating if it doesn't exist
+        /// Updates rating if it has changed
+        /// Deletes rating if it was cancelled
+        /// </summary>
+        /// <param name="ratingModel">Rating model</param>
+        /// <param name="userId">Current user Id</param>
+        /// <param name="ratingByCurrentUser">Rating by current user</param>
+        private async Task ProcessRatingSet(RatingModel ratingModel, int userId, Rating ratingByCurrentUser)
+        {
+            if (ratingByCurrentUser == null)
             {
-                await Delete(userId, ratingModel.PostId);
+                await Create(ratingModel, userId);
+            }
+            else if (ratingByCurrentUser.Value == (RatingValue)ratingModel.Value)
+            {
+                await _ratingRepository.Delete(ratingByCurrentUser.Id);
             }
             else
             {
-                await CreateOrUpdate(ratingModel, userId, ratingByCurrentUser);
+                ratingByCurrentUser.Value = (RatingValue)ratingModel.Value;
+                await _ratingRepository.Update(ratingByCurrentUser);
             }
         }
 
@@ -67,7 +85,8 @@ namespace TestProject.BL.Services
             return new UpdateRatingModel
             {
                 TotalRating = totalRating,
-                RatingByCurrentUser = (RatingOption)ratingByCurrentUser
+                RatingByCurrentUser = ratingByCurrentUser == null 
+                    ? RatingOption.Unrated : (RatingOption)ratingByCurrentUser.Value
             };
         }
 
@@ -80,36 +99,6 @@ namespace TestProject.BL.Services
         {
             var ratings = _ratingRepository.Get(r => r.PostId == postId);
             return RatingHelper.CalculateRating(ratings);
-        }
-
-        /// <summary>
-        /// Updates rating if it was set or creates a new one
-        /// </summary>
-        /// <param name="ratingModel">Rating</param>
-        /// <param name="userId">Current user Id</param>
-        /// <param name="ratingByCurrentUser">Rating by current user</param>
-        private async Task CreateOrUpdate(RatingModel ratingModel, int userId, RatingValue ratingByCurrentUser)
-        {
-            if (ratingByCurrentUser == RatingValue.Unrated)
-            {
-                await Create(ratingModel, userId);
-            }
-            else
-            {
-                await Update(ratingModel, userId);
-            }
-        }
-
-        /// <summary>
-        /// Updates rating
-        /// </summary>
-        /// <param name="ratingModel">Rating</param>
-        /// <param name="userId">Current user id</param>
-        private async Task Update(RatingModel ratingModel, int userId)
-        {
-            var rating = _ratingRepository.Get(r => r.PostId == ratingModel.PostId && r.UserId == userId).Single();
-            rating.Value = (RatingValue)ratingModel.Value;
-            await _ratingRepository.Update(rating);
         }
 
         /// <summary>
@@ -130,22 +119,10 @@ namespace TestProject.BL.Services
         /// <param name="userId">User Id</param>
         /// <param name="postId">Post Id</param>
         /// <returns>Rating Value</returns>
-        private RatingValue GetRatingByUser(int userId, int postId)
+        private Rating GetRatingByUser(int userId, int postId)
         {
             var ratings = _ratingRepository.Get(r => r.PostId == postId && r.UserId == userId);
-            return ratings.Count == 0 ? RatingValue.Unrated : ratings.Single().Value;
-        }
-
-        /// <summary>
-        /// Deletes rating
-        /// </summary>
-        /// <param name="userId">User Id</param>
-        /// <param name="postId">Post Id</param>
-        /// <returns></returns>
-        private async Task Delete(int userId, int postId)
-        {
-            var rating = _ratingRepository.Get(r => r.PostId == postId && r.UserId == userId).Single();
-            await _ratingRepository.Delete(rating.Id);
+            return ratings.SingleOrDefault();
         }
     }
 }

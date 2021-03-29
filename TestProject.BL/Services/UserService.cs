@@ -5,6 +5,8 @@ using TestProject.BL.Mappers;
 using TestProject.DAL.Models;
 using System.Linq;
 using TestProject.BL.Utils;
+using System;
+using TestProject.BL.Exceptions;
 
 namespace TestProject.BL.Services
 {
@@ -14,14 +16,17 @@ namespace TestProject.BL.Services
     public class UserService : IUserService
     {
         private IRepository<User> _userRepository;
+        private IRepository<Rating> _ratingRepository;
         private IMapper<UserLoginModel, User> _userLoginMapper;
         private IMapper<UserProfile, User> _userProfileMapper;
 
-        public UserService(IRepository<User> repository, 
+        public UserService(IRepository<User> repository,
+            IRepository<Rating> ratingRepository,
             IMapper<UserLoginModel, User> userLoginMapper,
             IMapper<UserProfile, User> userProfileMapper)
         {
             _userRepository = repository;
+            _ratingRepository = ratingRepository;
             _userLoginMapper = userLoginMapper;
             _userProfileMapper = userProfileMapper;
         }
@@ -49,8 +54,17 @@ namespace TestProject.BL.Services
         /// <returns>User profile</returns>
         public UserProfile GetProfile(string email)
         {
-            var user = _userRepository.GetByEmail(email);
-            return _userProfileMapper.ToBlModel(user);
+            try
+            {
+                var user = _userRepository.GetByEmail(email);
+                var userProfile = _userProfileMapper.ToBlModel(user);
+                userProfile.Rating = CalculateRating(user.Id);
+                return userProfile;
+            }
+            catch (InvalidOperationException)
+            {
+                throw new UserNotFoundException();
+            }            
         }
         
         /// <summary>
@@ -96,6 +110,17 @@ namespace TestProject.BL.Services
         private bool DoesExist(string email)
         {
             return _userRepository.Get(u => u.Email == email).SingleOrDefault() != null;
+        }
+
+        /// <summary>
+        /// Calculates user's rating
+        /// </summary>
+        /// <param name="userId">User Id</param>
+        /// <returns>Rating</returns>
+        private int CalculateRating(int userId)
+        {
+            var ratings = _ratingRepository.Get(r => r.Post.UserId == userId);
+            return RatingHelper.CalculateRating(ratings);
         }
     }
 }

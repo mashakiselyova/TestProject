@@ -20,10 +20,30 @@ function Posts({ userProfile, filterByCurrentUser = false }) {
             });
     }, [userProfile, filterByCurrentUser])
 
+    function handleUpdateRating(postId) {
+        fetch(`/rating/get/${postId}`, { method: 'get' })
+            .then((response) => {                
+                response.json().then((data) => {
+                    let newPosts = [...posts];
+                    const index = newPosts.map(p => p.id).indexOf(postId);
+                    newPosts[index].totalRating = data.totalRating;
+                    newPosts[index].selectedRating = data.ratingByCurrentUser;
+                    setPosts(newPosts);
+                });
+            })
+            .catch(() => {
+                NotificationManager.error("Couldn't get rating");
+            });
+    }
+
     return (
         <div>
             {posts.map((post) => (
-                <Post key={post.id} post={post} userProfile={userProfile} />
+                <Post
+                    key={post.id}
+                    post={post}
+                    userProfile={userProfile}
+                    updateRating={handleUpdateRating} />
             ))}
             <NotificationContainer />
         </div>

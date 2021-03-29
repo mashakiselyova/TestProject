@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using TestProject.DAL.Models;
+using TestProject.Enums;
 
 namespace TestProject.BL.Models
 {
@@ -10,6 +12,9 @@ namespace TestProject.BL.Models
         public string Content { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
-        public User Author { get; set; }
+        public Author Author { get; set; }
+        public RatingValue SelectedRating { get; set; }
+        public int TotalRating { get; set; }
+        public List<Rating> Ratings { get; set; }
     }
 }

@@ -13,4 +13,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TestProject.Enums\TestProject.Enums.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -10,6 +10,7 @@ using TestProject.DAL.Repositories;
 using Xunit;
 using FluentAssertions;
 using TestProject.BL.Exceptions;
+using System.Linq;
 
 namespace TestProject.BL.Test.Services
 {
@@ -34,11 +35,12 @@ namespace TestProject.BL.Test.Services
         public async Task Should_create_new_post()
         {
             var post = new Post();
-            var users = new List<User>() { new User() };
+            var users = new List<User>() { new User { Email = "email" } };
             _mockEditPostMapper.Setup(mapper => mapper.ToDalModel(It.IsAny<EditPostModel>())).Returns(post);
-            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).Returns(users);
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
 
-            await _postService.Create(new EditPostModel(), "");
+            await _postService.Create(new EditPostModel(), "email");
 
             _mockPostRepository.Verify(repo => repo.Create(post), Times.Exactly(1));
         }
@@ -47,11 +49,15 @@ namespace TestProject.BL.Test.Services
         [MemberData(nameof(GetAllData))]
         public async Task Should_get_filtered_posts(int? userId, List<PostModel> expected, Post post, PostModel postModel)
         {
+            var user = new User { Id = 2, Email = "email" };
+            var users = new List<User>() { new User { Email = "email" } };
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
             _mockPostRepository.Setup(repo => repo.Get(It.IsAny<Func<Post, bool>>())).Returns(new List<Post>() { post });
             _mockPostRepository.Setup(repo => repo.Get()).ReturnsAsync(new List<Post>() { post, post });
             _mockPostMapper.Setup(mapper => mapper.ToBlModel(post)).Returns(postModel);
 
-            var result = await _postService.GetAll(userId);
+            var result = await _postService.GetAll(userId, "email");
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -71,15 +77,24 @@ namespace TestProject.BL.Test.Services
         }
 
         [Fact]
+        public async Task If_post_does_not_exist_should_throw_exception()
+        {
+            _mockPostRepository.Setup(repo => repo.FindById(1)).ReturnsAsync((Post)null);
+
+            await Assert.ThrowsAsync<PostNotFoundException>(async () => await _postService.GetById(1));
+        }
+
+        [Fact]
         public async Task When_author_is_current_user_should_update_post()
         {
             var userId = 1;
             var post = new Post { UserId = userId };
-            var users = new List<User>() { new User() { Id = userId } };
-            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).Returns(users);
+            var users = new List<User>() { new User() { Id = userId, Email = "email" } };
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
             _mockPostRepository.Setup(repo => repo.FindById(It.IsAny<int>())).ReturnsAsync(post);
 
-            await _postService.Edit(new EditPostModel(), "");
+            await _postService.Edit(new EditPostModel(), "email");
 
             _mockPostRepository.Verify(repo => repo.Update(post), Times.Exactly(1));
         }
@@ -88,12 +103,13 @@ namespace TestProject.BL.Test.Services
         public async Task When_author_is_not_current_user_should_throw_exception()
         {
             var userId = 1;
-            var users = new List<User>() { new User() { Id = userId } };
+            var users = new List<User>() { new User() { Id = userId, Email = "email" } };
             var post = new Post { UserId = 2 };
-            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).Returns(users);
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
             _mockPostRepository.Setup(repo => repo.FindById(It.IsAny<int>())).ReturnsAsync(post);
 
-            await Assert.ThrowsAsync<EditFailedException>(async () => await _postService.Edit(new EditPostModel(), ""));
+            await Assert.ThrowsAsync<EditFailedException>(async () => await _postService.Edit(new EditPostModel(), "email"));
         }
 
         [Fact]
@@ -108,19 +124,26 @@ namespace TestProject.BL.Test.Services
         public static IEnumerable<object[]> GetAllData =>
             new List<object[]>
             {
-                new object[] 
+                new object[]
                 {
-                    null, 
-                    new List<PostModel> { new PostModel(), new PostModel() },
-                    new Post(),
-                    new PostModel()
+                    null,
+                    new List<PostModel>
+                    {
+                        new PostModel() { Ratings = new List<Rating>() { new Rating() { UserId = 2 } } },
+                        new PostModel() { Ratings = new List<Rating>() { new Rating() { UserId = 2 } } }
+                    },
+                    new Post() { Ratings = new List<Rating>() { new Rating() { UserId = 2} } },
+                    new PostModel() { Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
                 },
                 new object[]
                 {
                     1,
-                    new List<PostModel> { new PostModel { Author = new User { Id = 1 } } },
-                    new Post() { User = new User { Id = 1 } },
-                    new PostModel { Author = new User { Id = 1 } }
+                    new List<PostModel>
+                    {
+                        new PostModel { Author = new Author { Id = 1 } , Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
+                    },
+                    new Post() { User = new User { Id = 1 }, Ratings = new List<Rating>() { new Rating() { UserId = 2 } } },
+                    new PostModel { Author = new Author { Id = 1 }, Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
                 }
             };
 

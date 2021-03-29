@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Security.Claims;
+using TestProject.BL.Exceptions;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
 using TestProject.Filters;
@@ -24,12 +26,23 @@ namespace TestProject.Controllers
 
         [CustomAuthorizationFilter]
         [Route("getUserProfile")]
-        public ProfileDisplayModel GetUserProfile()
+        public ActionResult<ProfileDisplayModel> GetUserProfile()
         {
-            var userEmail = (User.Identity as ClaimsIdentity).Claims
+            try
+            {
+                var userEmail = (User.Identity as ClaimsIdentity).Claims
                 .FirstOrDefault(claim => claim.Type.Contains("emailaddress")).Value;
-            var userProfile = _userService.GetProfile(userEmail);
-            return _profileDisplayMapper.ToWebModel(userProfile);
+                var userProfile = _userService.GetProfile(userEmail);
+                return _profileDisplayMapper.ToWebModel(userProfile);
+            }
+            catch (UserNotFoundException)
+            {
+                return StatusCode(404);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
     }
 }

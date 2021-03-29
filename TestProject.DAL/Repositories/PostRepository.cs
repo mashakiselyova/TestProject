@@ -25,7 +25,8 @@ namespace TestProject.DAL.Repositories
 
         public async Task<List<Post>> Get()
         {
-            return await _context.Posts.Include(p => p.User).ToListAsync();
+            return await _context.Posts.Include(p => p.User)
+            .Include(p => p.Ratings).AsNoTracking().ToListAsync();
         }
 
         public async Task<Post> FindById(int id)
@@ -48,7 +49,9 @@ namespace TestProject.DAL.Repositories
 
         public List<Post> Get(Func<Post, bool> predicate)
         {
-            return _context.Posts.Include(p => p.User).Where(predicate).ToList();
+            return _context.Posts.Include(p => p.User)
+                .Include(p => p.Ratings).AsNoTracking()
+                .Where(predicate).ToList();
         }
     }
 }

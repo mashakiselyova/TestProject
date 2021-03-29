@@ -11,7 +11,8 @@ namespace TestProject.Mappers
             {
                 Id = model.Id,
                 Name = model.Name,
-                Email = model.Email
+                Email = model.Email,
+                Rating = model.Rating
             };
         }
 
@@ -21,7 +22,8 @@ namespace TestProject.Mappers
             {
                 Id = model.Id,
                 Name = model.Name,
-                Email = model.Email
+                Email = model.Email,
+                Rating = model.Rating
             };
         }
     }

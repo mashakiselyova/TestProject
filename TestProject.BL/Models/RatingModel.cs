@@ -1,4 +1,4 @@
-﻿using TestProject.BL.Enums;
+﻿using TestProject.Enums;
 
 namespace TestProject.BL.Models
 {

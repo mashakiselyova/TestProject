@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using TestProject.BL.Enums;
 using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
 using TestProject.BL.Utils;
-using TestProject.DAL.Enums;
 using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
+using TestProject.Enums;
 
 namespace TestProject.BL.Services
 {
@@ -49,16 +48,11 @@ namespace TestProject.BL.Services
             {
                 await Create(ratingModel, userId);
             }
-            else if (ratingByCurrentUser.Value == (RatingValue)ratingModel.Value)
-            {
-                await _ratingRepository.Delete(ratingByCurrentUser.Id);
-            }
             else
             {
-                ratingByCurrentUser.Value = (RatingValue)ratingModel.Value;
-                await _ratingRepository.Update(ratingByCurrentUser);
+                await Update(ratingModel, ratingByCurrentUser);
             }
-        }        
+        }
 
         /// <summary>
         /// Gets total rating and rating by current user
@@ -75,7 +69,7 @@ namespace TestProject.BL.Services
             {
                 TotalRating = totalRating,
                 RatingByCurrentUser = ratingByCurrentUser == null 
-                    ? RatingButtonPosition.Unrated : (RatingButtonPosition)ratingByCurrentUser.Value
+                    ? RatingValue.Unrated : ratingByCurrentUser.Value
             };
         }
 
@@ -112,6 +106,31 @@ namespace TestProject.BL.Services
         {
             var ratings = _ratingRepository.Get(r => r.PostId == postId && r.UserId == userId);
             return ratings.SingleOrDefault();
+        }
+
+        private async Task Update(RatingModel ratingModel, Rating ratingByCurrentUser)
+        {
+            if (ratingModel.Value == RatingButtonPosition.ThumbsUp)
+            {
+                await ProcessRatingButton(ratingByCurrentUser, RatingValue.Plus);
+            }
+            else
+            {
+                await ProcessRatingButton(ratingByCurrentUser, RatingValue.Minus);
+            }
+        }
+
+        private async Task ProcessRatingButton(Rating ratingByCurrentUser, RatingValue ratingValue)
+        {
+            if (ratingByCurrentUser.Value == ratingValue)
+            {
+                await _ratingRepository.Delete(ratingByCurrentUser.Id);
+            }
+            else
+            {
+                ratingByCurrentUser.Value = ratingValue;
+                await _ratingRepository.Update(ratingByCurrentUser);
+            }
         }
     }
 }

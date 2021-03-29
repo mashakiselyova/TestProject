@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TestProject.BL.Enums;
 using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
 using TestProject.BL.Utils;
-using TestProject.DAL.Enums;
 using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
+using TestProject.Enums;
 
 namespace TestProject.BL.Services
 {
@@ -148,7 +147,7 @@ namespace TestProject.BL.Services
             {
                 var selectedRating = post.Ratings.Where(r => r.UserId == currentUserId).SingleOrDefault();
                 post.SelectedRating = selectedRating == null 
-                    ? RatingButtonPosition.Unrated : (RatingButtonPosition)selectedRating.Value;
+                    ? RatingValue.Unrated : selectedRating.Value;
             }
         }
     }

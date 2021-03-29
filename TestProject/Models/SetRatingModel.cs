@@ -4,7 +4,7 @@ namespace TestProject.Models
 {
     public class SetRatingModel
     {
-        public ButtonPosition Value { get; set; }
+        public RatingButtonPosition Value { get; set; }
         public int PostId { get; set; }
     }
 }

@@ -8,9 +8,9 @@ using TestProject.BL.Exceptions;
 using TestProject.BL.Mappers;
 using TestProject.BL.Models;
 using TestProject.BL.Services;
-using TestProject.DAL.Enums;
 using TestProject.DAL.Models;
 using TestProject.DAL.Repositories;
+using TestProject.Enums;
 using Xunit;
 
 namespace TestProject.BL.Test.Services

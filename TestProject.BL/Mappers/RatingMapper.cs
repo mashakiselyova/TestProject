@@ -1,7 +1,6 @@
-﻿using TestProject.BL.Enums;
-using TestProject.BL.Models;
-using TestProject.DAL.Enums;
+﻿using TestProject.BL.Models;
 using TestProject.DAL.Models;
+using TestProject.Enums;
 
 namespace TestProject.BL.Mappers
 {

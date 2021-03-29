@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TestProject.DAL.Enums;
 using TestProject.DAL.Models;
+using TestProject.Enums;
 
 namespace TestProject.BL.Utils
 {

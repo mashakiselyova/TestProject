@@ -1,4 +1,4 @@
-﻿using TestProject.DAL.Enums;
+﻿using TestProject.Enums;
 
 namespace TestProject.DAL.Models
 {

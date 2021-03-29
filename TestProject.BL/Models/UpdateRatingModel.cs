@@ -1,10 +1,10 @@
-﻿using TestProject.BL.Enums;
+﻿using TestProject.Enums;
 
 namespace TestProject.BL.Models
 {
     public class UpdateRatingModel
     {
         public int TotalRating { get; set; }
-        public RatingButtonPosition RatingByCurrentUser { get; set; }
+        public RatingValue RatingByCurrentUser { get; set; }
     }
 }

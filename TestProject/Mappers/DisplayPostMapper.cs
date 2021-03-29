@@ -1,6 +1,4 @@
-﻿using TestProject.BL.Enums;
-using TestProject.BL.Models;
-using TestProject.Enums;
+﻿using TestProject.BL.Models;
 using TestProject.Models;
 
 namespace TestProject.Mappers
@@ -23,7 +21,7 @@ namespace TestProject.Mappers
                     LastName = post.Author.LastName,
                     Email = post.Author.Email
                 },
-                SelectedRating = (ButtonPosition)post.SelectedRating,
+                SelectedRating = post.SelectedRating,
                 TotalRating = post.TotalRating
             };
         }
@@ -44,7 +42,7 @@ namespace TestProject.Mappers
                     LastName = post.Author.LastName,
                     Email = post.Author.Email
                 },
-                SelectedRating = (RatingButtonPosition)post.SelectedRating,
+                SelectedRating = post.SelectedRating,
                 TotalRating = post.TotalRating
             };
         }        

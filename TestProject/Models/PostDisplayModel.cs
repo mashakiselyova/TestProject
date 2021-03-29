@@ -11,7 +11,7 @@ namespace TestProject.Models
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public Author Author { get; set; }
-        public ButtonPosition SelectedRating { get; set; }
+        public RatingValue SelectedRating { get; set; }
         public int TotalRating { get; set; }
     }
 }

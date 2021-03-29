@@ -1,8 +1,7 @@
 ﻿namespace TestProject.Enums
 {
-    public enum ButtonPosition
+    public enum RatingButtonPosition
     {
-        Unrated = 0,
         ThumbsUp = 1,
         ThumbsDown = 2
     }

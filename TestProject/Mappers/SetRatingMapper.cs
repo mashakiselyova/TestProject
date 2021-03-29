@@ -1,5 +1,4 @@
-﻿using TestProject.BL.Enums;
-using TestProject.BL.Models;
+﻿using TestProject.BL.Models;
 using TestProject.Enums;
 using TestProject.Models;
 
@@ -11,7 +10,7 @@ namespace TestProject.Mappers
         {
             return new RatingModel
             {
-                Value = (RatingButtonPosition)model.Value,
+                Value = model.Value,
                 PostId = model.PostId
             };
         }
@@ -20,7 +19,7 @@ namespace TestProject.Mappers
         {
             return new SetRatingModel
             {
-                Value = (ButtonPosition)model.Value,
+                Value = model.Value,
                 PostId = model.PostId
             };
         }

@@ -10,9 +10,8 @@ using TestProject.DAL.Repositories;
 using Xunit;
 using TestProject.BL.Exceptions;
 using System.Linq;
-using TestProject.BL.Enums;
-using TestProject.DAL.Enums;
 using FluentAssertions;
+using TestProject.Enums;
 
 namespace TestProject.BL.Test.Services
 {
@@ -125,7 +124,7 @@ namespace TestProject.BL.Test.Services
                 new object[] {1, new UpdateRatingModel 
                 { 
                     TotalRating = 1,
-                    RatingByCurrentUser = RatingButtonPosition.ThumbsUp 
+                    RatingByCurrentUser = RatingValue.Plus 
                 } }
             };
     }

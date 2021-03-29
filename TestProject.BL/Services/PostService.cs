@@ -39,6 +39,10 @@ namespace TestProject.BL.Services
         /// <param name="userEmail">Author's email</param>
         public async Task Create(EditPostModel editPostModel, string userEmail)
         {
+            if (!ValidatePost(editPostModel))
+            {
+                throw new ValidationFailedException("Post validation failed");
+            }
             var post = _editPostMapper.ToDalModel(editPostModel);
             var user = _userRepository.GetByEmail(userEmail);
             post.UserId = user.Id;
@@ -86,6 +90,10 @@ namespace TestProject.BL.Services
         /// <param name="userEmail">Author's email</param>
         public async Task Edit(EditPostModel editPostModel, string userEmail)
         {
+            if (!ValidatePost(editPostModel))
+            {
+                throw new ValidationFailedException("Post validation failed");
+            }
             var currentUser = _userRepository.GetByEmail(userEmail);
             var post = await _postRepository.FindById(editPostModel.Id);
             if (post.UserId != currentUser.Id)
@@ -149,6 +157,11 @@ namespace TestProject.BL.Services
                 post.SelectedRating = selectedRating == null 
                     ? RatingValue.Unrated : selectedRating.Value;
             }
+        }
+
+        private bool ValidatePost(EditPostModel post)
+        {
+            return (!string.IsNullOrEmpty(post.Title)) && (!string.IsNullOrEmpty(post.Content));
         }
     }
 }

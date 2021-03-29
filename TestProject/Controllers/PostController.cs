@@ -69,11 +69,15 @@ namespace TestProject.Controllers
                 }
                 return Ok();
             }
-            catch
+            catch (ValidationFailedException)
+            {
+                return StatusCode(400);
+            }
+            catch (Exception)
             {
                 return StatusCode(500);
             }
-            
+
         }
 
         [HttpPost]

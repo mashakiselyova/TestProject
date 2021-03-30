@@ -118,14 +118,6 @@ namespace TestProject.BL.Test.Services
         }
 
         [Fact]
-        public async Task When_post_is_not_valid_should_throw_exception()
-        {
-            var editPostModel = new EditPostModel { Title = "", Content = "" };
-
-            await Assert.ThrowsAsync<ValidationFailedException>(async () => await _postService.Edit(editPostModel, "email"));
-        }
-
-        [Fact]
         public async Task Should_delete_post()
         {
             var postId = 1;

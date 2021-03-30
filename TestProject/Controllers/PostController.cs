@@ -57,6 +57,10 @@ namespace TestProject.Controllers
         [Route("/posts/edit")]
         public async Task<IActionResult> Edit([FromBody] EditPostModel post)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400);
+            }
             try
             {
                 if (post.Id == 0)
@@ -68,10 +72,6 @@ namespace TestProject.Controllers
                     await _postService.Edit(_editPostMapper.ToBlModel(post), User.GetEmail());
                 }
                 return Ok();
-            }
-            catch (ValidationFailedException)
-            {
-                return StatusCode(400);
             }
             catch (Exception)
             {

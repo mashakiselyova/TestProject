@@ -11,5 +11,6 @@ namespace TestProject.BL.Services
         Task<EditPostModel> GetById(int id);
         Task Edit(EditPostModel editPostModel, string userEmail);
         Task Delete(int id);
+        RichPostModel GetRichPost(int id, string userEmail);
     }
 }

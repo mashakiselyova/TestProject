@@ -11,6 +11,7 @@ using Xunit;
 using FluentAssertions;
 using TestProject.BL.Exceptions;
 using System.Linq;
+using TestProject.Enums;
 
 namespace TestProject.BL.Test.Services
 {
@@ -21,6 +22,7 @@ namespace TestProject.BL.Test.Services
         private Mock<IRepository<User>> _mockUserRepository;
         private Mock<IMapper<EditPostModel, Post>> _mockEditPostMapper;
         private Mock<IMapper<PostModel, Post>> _mockPostMapper;
+        private Mock<IMapper<RichPostModel, Post>> _mockRichPostMapper;
 
         public PostServiceTests()
         {
@@ -28,7 +30,10 @@ namespace TestProject.BL.Test.Services
             _mockUserRepository = new Mock<IRepository<User>>();
             _mockEditPostMapper = new Mock<IMapper<EditPostModel, Post>>();
             _mockPostMapper = new Mock<IMapper<PostModel, Post>>();
-            _postService = new PostService(_mockPostRepository.Object, _mockUserRepository.Object, _mockEditPostMapper.Object, _mockPostMapper.Object);
+            _mockRichPostMapper = new Mock<IMapper<RichPostModel, Post>>();
+            _postService = new PostService(_mockPostRepository.Object, 
+                _mockUserRepository.Object, _mockEditPostMapper.Object, 
+                _mockPostMapper.Object, _mockRichPostMapper.Object);
         }
 
         [Fact]
@@ -121,6 +126,39 @@ namespace TestProject.BL.Test.Services
             _mockPostRepository.Verify(repo => repo.Delete(postId), Times.Exactly(1));
         }
 
+        [Theory]
+        [MemberData(nameof(RichPostData))]
+        public void Should_get_rich_post(Post post, List<User> users, RichPostModel expected)
+        {
+            var posts = new List<Post> { post };
+            var richPost = new RichPostModel
+            {
+                Id = 1,
+                Title = "title",
+                Content = "content",
+                Author = new Author { Id = 1 }
+            };
+            _mockPostRepository.Setup(repo => repo.Get(It.IsAny<Func<Post, bool>>()))
+                .Returns((Func<Post, bool> predicate) => posts.Where(predicate).ToList());
+            _mockRichPostMapper.Setup(mapper => mapper.ToBlModel(post)).Returns(richPost);
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
+
+            var result = _postService.GetRichPost(1, "email");
+
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void If_rich_post_does_not_exist_should_throw_exception()
+        {
+            var posts = new List<Post>();
+            _mockPostRepository.Setup(repo => repo.Get(It.IsAny<Func<Post, bool>>()))
+                .Returns((Func<Post, bool> predicate) => posts.Where(predicate).ToList());
+
+            Assert.Throws<PostNotFoundException>(() => _postService.GetRichPost(1, "email"));
+        }
+
         public static IEnumerable<object[]> GetAllData =>
             new List<object[]>
             {
@@ -152,6 +190,38 @@ namespace TestProject.BL.Test.Services
             {
                 new object[] {1, new EditPostModel { Id = 1 } },
                 new object[] {2, new EditPostModel { Id = 2 } }
+            };
+
+        public static IEnumerable<object[]> RichPostData =>
+            new List<object[]>
+            {
+                new object[]
+                {
+                    new Post
+                    {
+                        Id = 1,
+                        Title = "title",
+                        Content = "content",
+                        UserId = 1,
+                        User = new User{ Id = 1 },
+                        Ratings = new List<Rating> { new Rating
+                        {
+                            PostId=1,
+                            UserId=2,
+                            Value = RatingValue.Plus} 
+                        }
+                    },
+                    new List<User> { new User { Id = 2, Email = "email" } },
+                    new RichPostModel
+                    {
+                        Id = 1,
+                        Title = "title",
+                        Content = "content",
+                        Author = new Author{ Id = 1 },
+                        SelectedRating = RatingValue.Plus,
+                        TotalRating = 1
+                    }
+                }
             };
     }
 }

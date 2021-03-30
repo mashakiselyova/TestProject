@@ -2,7 +2,7 @@
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import Post from './Post'
 
-function Posts({ userProfile, filterByCurrentUser = false }) {
+function Posts({ userProfile, filterByCurrentUser = false, getUpdatedRating }) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
@@ -20,20 +20,13 @@ function Posts({ userProfile, filterByCurrentUser = false }) {
             });
     }, [userProfile, filterByCurrentUser])
 
-    function handleUpdateRating(postId) {
-        fetch(`/rating/get/${postId}`, { method: 'get' })
-            .then((response) => {                
-                response.json().then((data) => {
-                    let newPosts = [...posts];
-                    const index = newPosts.map(p => p.id).indexOf(postId);
-                    newPosts[index].totalRating = data.totalRating;
-                    newPosts[index].selectedRating = data.ratingByCurrentUser;
-                    setPosts(newPosts);
-                });
-            })
-            .catch(() => {
-                NotificationManager.error("Couldn't get rating");
-            });
+    async function handleUpdateRating(postId) {
+        const rating = await getUpdatedRating(postId);
+        let newPosts = [...posts];
+        const index = newPosts.map(p => p.id).indexOf(postId);
+        newPosts[index].totalRating = rating.totalRating;
+        newPosts[index].selectedRating = rating.ratingByCurrentUser;
+        setPosts(newPosts);
     }
 
     return (

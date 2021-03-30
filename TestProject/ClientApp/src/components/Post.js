@@ -37,7 +37,7 @@ function Post({ post, userProfile, updateRating }) {
                     />
                 </div>
                 <div className="col">
-                    <h5 className="card-title">{post.title}</h5>
+                    <Link to={`/posts/post/${post.id}`}><h5 className="card-title">{post.title}</h5></Link>
                     <h6 className="card-subtitle mb-2 text-muted">{new Date(post.createDate).toLocaleDateString()}</h6>
                     <p className="card-text">{post.content}</p>
                     {userProfile.loggedIn && userProfile.id === post.author.id

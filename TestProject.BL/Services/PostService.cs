@@ -21,15 +21,18 @@ namespace TestProject.BL.Services
         private IRepository<User> _userRepository;
         private IMapper<EditPostModel, Post> _editPostMapper;
         private IMapper<PostModel, Post> _postMapper;
+        private IMapper<RichPostModel, Post> _richPostMapper;
 
         public PostService(IRepository<Post> postRepository, IRepository<User> userRepository,
             IMapper<EditPostModel, Post> editPostMapper,
-            IMapper<PostModel, Post> postMapper)
+            IMapper<PostModel, Post> postMapper,
+            IMapper<RichPostModel, Post> richPostMapper)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
             _editPostMapper = editPostMapper;
             _postMapper = postMapper;
+            _richPostMapper = richPostMapper;
         }
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace TestProject.BL.Services
             var user = _userRepository.GetByEmail(userEmail);
             post.UserId = user.Id;
             post.CreateDate = DateTime.Now;
-            post.UpdateDate = DateTime.Now;
+            post.UpdateDate = post.CreateDate;
             await _postRepository.Create(post);
         }
 
@@ -108,6 +111,29 @@ namespace TestProject.BL.Services
         }
 
         /// <summary>
+        /// Gets post with user and rating
+        /// </summary>
+        /// <param name="id">Post Id</param>
+        /// <param name="userEmail">Current user email</param>
+        /// <returns>RichPostModel</returns>
+        public RichPostModel GetRichPost(int id, string userEmail)
+        {
+            var post = _postRepository.Get(p => p.Id == id).FirstOrDefault();
+            if (post == null)
+            {
+                throw new PostNotFoundException();
+            }
+            var richPost = _richPostMapper.ToBlModel(post);
+            richPost.TotalRating = RatingHelper.CalculateRating(post.Ratings);
+            if (userEmail != null)
+            {
+                var currentUserId = _userRepository.GetByEmail(userEmail).Id;
+                richPost.SelectedRating = GetSelectedRating(currentUserId, post.Ratings);
+            }
+            return richPost;
+        }
+
+        /// <summary>
         /// Gets filtered posts
         /// </summary>
         /// <param name="userId">User Id</param>
@@ -145,10 +171,14 @@ namespace TestProject.BL.Services
         {
             foreach (var post in postModelList)
             {
-                var selectedRating = post.Ratings.Where(r => r.UserId == currentUserId).SingleOrDefault();
-                post.SelectedRating = selectedRating == null 
-                    ? RatingValue.Unrated : selectedRating.Value;
+                post.SelectedRating = GetSelectedRating(currentUserId, post.Ratings);
             }
+        }   
+        
+        private RatingValue GetSelectedRating(int currentUserId, List<Rating> ratings)
+        {
+            var selectedRating = ratings.Where(r => r.UserId == currentUserId).SingleOrDefault();
+            return selectedRating == null ? RatingValue.Unrated : selectedRating.Value;
         }
     }
 }

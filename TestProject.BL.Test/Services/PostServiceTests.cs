@@ -34,13 +34,14 @@ namespace TestProject.BL.Test.Services
         [Fact]
         public async Task Should_create_new_post()
         {
-            var post = new Post();
+            var editPostModel = new EditPostModel { Title = "title", Content = "content" };
+            var post = new Post { Title = "title", Content = "content" };
             var users = new List<User>() { new User { Email = "email" } };
-            _mockEditPostMapper.Setup(mapper => mapper.ToDalModel(It.IsAny<EditPostModel>())).Returns(post);
+            _mockEditPostMapper.Setup(mapper => mapper.ToDalModel(editPostModel)).Returns(post);
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
                 .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
 
-            await _postService.Create(new EditPostModel(), "email");
+            await _postService.Create(editPostModel, "email");
 
             _mockPostRepository.Verify(repo => repo.Create(post), Times.Exactly(1));
         }
@@ -88,13 +89,15 @@ namespace TestProject.BL.Test.Services
         public async Task When_author_is_current_user_should_update_post()
         {
             var userId = 1;
-            var post = new Post { UserId = userId };
+            var postId = 1;
+            var editPostModel = new EditPostModel { Id = postId, Title = "title", Content = "content" };
+            var post = new Post { UserId = userId, Title = "title", Content = "content" };
             var users = new List<User>() { new User() { Id = userId, Email = "email" } };
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
                 .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
-            _mockPostRepository.Setup(repo => repo.FindById(It.IsAny<int>())).ReturnsAsync(post);
+            _mockPostRepository.Setup(repo => repo.FindById(postId)).ReturnsAsync(post);
 
-            await _postService.Edit(new EditPostModel(), "email");
+            await _postService.Edit(editPostModel, "email");
 
             _mockPostRepository.Verify(repo => repo.Update(post), Times.Exactly(1));
         }
@@ -103,13 +106,15 @@ namespace TestProject.BL.Test.Services
         public async Task When_author_is_not_current_user_should_throw_exception()
         {
             var userId = 1;
+            var postId = 1;
             var users = new List<User>() { new User() { Id = userId, Email = "email" } };
-            var post = new Post { UserId = 2 };
+            var editPostModel = new EditPostModel { Id = postId, Title = "title", Content = "content" };
+            var post = new Post { UserId = 2, Title = "title", Content = "content" };
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
                 .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
-            _mockPostRepository.Setup(repo => repo.FindById(It.IsAny<int>())).ReturnsAsync(post);
+            _mockPostRepository.Setup(repo => repo.FindById(postId)).ReturnsAsync(post);
 
-            await Assert.ThrowsAsync<EditFailedException>(async () => await _postService.Edit(new EditPostModel(), "email"));
+            await Assert.ThrowsAsync<EditFailedException>(async () => await _postService.Edit(editPostModel, "email"));
         }
 
         [Fact]

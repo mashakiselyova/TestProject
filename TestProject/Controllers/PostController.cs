@@ -57,6 +57,10 @@ namespace TestProject.Controllers
         [Route("/posts/edit")]
         public async Task<IActionResult> Edit([FromBody] EditPostModel post)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400);
+            }
             try
             {
                 if (post.Id == 0)
@@ -69,11 +73,11 @@ namespace TestProject.Controllers
                 }
                 return Ok();
             }
-            catch
+            catch (Exception)
             {
                 return StatusCode(500);
             }
-            
+
         }
 
         [HttpPost]

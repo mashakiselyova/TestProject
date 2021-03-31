@@ -175,7 +175,7 @@ namespace TestProject.BL.Services
             }
         }   
         
-        private RatingValue GetSelectedRating(int currentUserId, List<Rating> ratings)
+        private RatingValue GetSelectedRating(int currentUserId, List<PostRating> ratings)
         {
             var selectedRating = ratings.Where(r => r.UserId == currentUserId).SingleOrDefault();
             return selectedRating == null ? RatingValue.Unrated : selectedRating.Value;

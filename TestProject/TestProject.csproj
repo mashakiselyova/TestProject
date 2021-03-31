@@ -31,6 +31,10 @@
   <ItemGroup>
     <Compile Remove="Migrations\20210309113235_AddRatingsTable.cs" />
     <Compile Remove="Migrations\20210309113235_AddRatingsTable.Designer.cs" />
+    <Compile Remove="Migrations\20210331150239_AddComments.cs" />
+    <Compile Remove="Migrations\20210331150239_AddComments.Designer.cs" />
+    <Compile Remove="Migrations\20210331150709_AddComments.cs" />
+    <Compile Remove="Migrations\20210331150709_AddComments.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,15 +12,15 @@ namespace TestProject.BL.Services
 {
     public class RatingService : IRatingService
     {
-        private IRepository<Rating> _ratingRepository;
+        private IRepository<PostRating> _ratingRepository;
         private IRepository<User> _userRepository;
         private IRepository<Post> _postRepository;
-        private IMapper<RatingModel, Rating> _ratingMapper;
+        private IMapper<RatingModel, PostRating> _ratingMapper;
 
-        public RatingService(IRepository<Rating> ratingRepository, 
+        public RatingService(IRepository<PostRating> ratingRepository, 
             IRepository<User> userRepository,
             IRepository<Post> postRepository,
-            IMapper<RatingModel, Rating> ratingMapper)
+            IMapper<RatingModel, PostRating> ratingMapper)
         {
             _ratingRepository = ratingRepository;
             _userRepository = userRepository;
@@ -102,13 +102,13 @@ namespace TestProject.BL.Services
         /// <param name="userId">User Id</param>
         /// <param name="postId">Post Id</param>
         /// <returns>Rating Value</returns>
-        private Rating GetRatingByUser(int userId, int postId)
+        private PostRating GetRatingByUser(int userId, int postId)
         {
             var ratings = _ratingRepository.Get(r => r.PostId == postId && r.UserId == userId);
             return ratings.SingleOrDefault();
         }
 
-        private async Task Update(RatingModel ratingModel, Rating ratingByCurrentUser)
+        private async Task Update(RatingModel ratingModel, PostRating ratingByCurrentUser)
         {
             if (ratingModel.Value == RatingButtonPosition.ThumbsUp)
             {
@@ -120,7 +120,7 @@ namespace TestProject.BL.Services
             }
         }
 
-        private async Task ProcessRatingButton(Rating ratingByCurrentUser, RatingValue ratingValue)
+        private async Task ProcessRatingButton(PostRating ratingByCurrentUser, RatingValue ratingValue)
         {
             if (ratingByCurrentUser.Value == ratingValue)
             {

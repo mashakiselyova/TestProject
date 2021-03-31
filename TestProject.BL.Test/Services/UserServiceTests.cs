@@ -19,14 +19,14 @@ namespace TestProject.BL.Test.Services
     {
         private UserService _userService;
         private Mock<IRepository<User>> _mockUserRepository;
-        private Mock<IRepository<Rating>> _mockRatingRepository;
+        private Mock<IRepository<PostRating>> _mockRatingRepository;
         private Mock<IMapper<UserLoginModel, User>> _mockUserLoginMapper;
         private Mock<IMapper<UserProfile, User>> _mockUserProfileMapper;
 
         public UserServiceTests()
         {
             _mockUserRepository = new Mock<IRepository<User>>();
-            _mockRatingRepository = new Mock<IRepository<Rating>>();
+            _mockRatingRepository = new Mock<IRepository<PostRating>>();
             _mockUserLoginMapper = new Mock<IMapper<UserLoginModel, User>>();
             _mockUserProfileMapper = new Mock<IMapper<UserProfile, User>>();
             _userService = new UserService(_mockUserRepository.Object, 
@@ -69,10 +69,10 @@ namespace TestProject.BL.Test.Services
         {
             var user = new User { Email = email };
             var users = new List<User>() { user };
-            var rating = new Rating() { Value = RatingValue.Plus };
+            var rating = new PostRating() { Value = RatingValue.Plus };
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
                 .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
-            _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<Rating, bool>>())).Returns(new List<Rating> { rating });
+            _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<PostRating, bool>>())).Returns(new List<PostRating> { rating });
             _mockUserProfileMapper.Setup(mapper => mapper.ToBlModel(user)).Returns(new UserProfile { Email = email });
 
             var result = _userService.GetProfile(email);

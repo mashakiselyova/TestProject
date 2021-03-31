@@ -37,7 +37,9 @@ namespace TestProject
         {
             builder.RegisterType<UserRepository>().As<IRepository<User>>();
             builder.RegisterType<PostRepository>().As<IRepository<Post>>();
-            builder.RegisterType<RatingRepository>().As<IRepository<Rating>>();
+            builder.RegisterType<PostRatingRepository>().As<IRepository<PostRating>>();
+            builder.RegisterType<CommentRepository>().As<IRepository<Comment>>();
+            builder.RegisterType<CommentRatingRepository>().As<IRepository<CommentRating>>();
         }
 
         private static void RegisterMappers(ContainerBuilder builder)
@@ -51,7 +53,7 @@ namespace TestProject
             builder.RegisterType<UserLoginMapper>().As<BL.Mappers.IMapper<UserLoginModel, User>>();
             builder.RegisterType<UserProfileMapper>().As<BL.Mappers.IMapper<UserProfile, User>>();
             builder.RegisterType<SetRatingMapper>().As<Mappers.IMapper<SetRatingModel, RatingModel>>();
-            builder.RegisterType<RatingMapper>().As<BL.Mappers.IMapper<RatingModel, Rating>>();
+            builder.RegisterType<RatingMapper>().As<BL.Mappers.IMapper<RatingModel, PostRating>>();
             builder.RegisterType<UpdateRatingMapper>().As<Mappers.IMapper<Models.UpdateRatingModel, BL.Models.UpdateRatingModel>>();
             builder.RegisterType<RichPostDisplayMapper>().As<Mappers.IMapper<RichPostDisplayModel, RichPostModel>>();
             builder.RegisterType<RichPostMapper>().As<BL.Mappers.IMapper<RichPostModel, Post>>();

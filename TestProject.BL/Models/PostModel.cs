@@ -15,6 +15,6 @@ namespace TestProject.BL.Models
         public Author Author { get; set; }
         public RatingValue SelectedRating { get; set; }
         public int TotalRating { get; set; }
-        public List<Rating> Ratings { get; set; }
+        public List<PostRating> Ratings { get; set; }
     }
 }

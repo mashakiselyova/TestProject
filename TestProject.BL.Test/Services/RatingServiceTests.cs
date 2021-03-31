@@ -18,17 +18,17 @@ namespace TestProject.BL.Test.Services
     public class RatingServiceTests
     {
         private RatingService _ratingService;
-        private Mock<IRepository<Rating>> _mockRatingRepository;
+        private Mock<IRepository<PostRating>> _mockRatingRepository;
         private Mock<IRepository<User>> _mockUserRepository;
         private Mock<IRepository<Post>> _mockPostRepository;
-        private Mock<IMapper<RatingModel, Rating>> _mockRatingMapper;
+        private Mock<IMapper<RatingModel, PostRating>> _mockRatingMapper;
 
         public RatingServiceTests()
         {
-            _mockRatingRepository = new Mock<IRepository<Rating>>();
+            _mockRatingRepository = new Mock<IRepository<PostRating>>();
             _mockUserRepository = new Mock<IRepository<User>>();
             _mockPostRepository = new Mock<IRepository<Post>>();
-            _mockRatingMapper = new Mock<IMapper<RatingModel, Rating>>();
+            _mockRatingMapper = new Mock<IMapper<RatingModel, PostRating>>();
             _ratingService = new RatingService(_mockRatingRepository.Object,
                 _mockUserRepository.Object, _mockPostRepository.Object, _mockRatingMapper.Object);
         }
@@ -37,8 +37,8 @@ namespace TestProject.BL.Test.Services
         public async Task If_rating_is_not_set_should_create_rating()
         {
             var ratingModel = new RatingModel { PostId = 1, Value = RatingButtonPosition.ThumbsUp };
-            var rating = new Rating();
-            var ratings = new List<Rating>() { rating };
+            var rating = new PostRating();
+            var ratings = new List<PostRating>() { rating };
             var users = new List<User>() { new User { Id = 2, Email = "email" } };
             Setup(users, ratings);
             _mockPostRepository.Setup(repo => repo.FindById(1)).ReturnsAsync(new Post { UserId = 1 });
@@ -53,8 +53,8 @@ namespace TestProject.BL.Test.Services
         public async Task If_rating_is_cancelled_should_delete_rating()
         {
             var ratingModel = new RatingModel { PostId = 1, Value = RatingButtonPosition.ThumbsUp };
-            var rating = new Rating { Id = 1, PostId = 1, UserId = 2, Value = RatingValue.Plus };
-            var ratings = new List<Rating>() { rating };
+            var rating = new PostRating { Id = 1, PostId = 1, UserId = 2, Value = RatingValue.Plus };
+            var ratings = new List<PostRating>() { rating };
             var users = new List<User>() { new User { Id = 2, Email = "email" } };
             Setup(users, ratings);
             _mockPostRepository.Setup(repo => repo.FindById(1)).ReturnsAsync(new Post { UserId = 1 });
@@ -68,8 +68,8 @@ namespace TestProject.BL.Test.Services
         public async Task If_rating_has_changed_should_update_rating()
         {
             var ratingModel = new RatingModel { PostId = 1, Value = RatingButtonPosition.ThumbsUp };
-            var rating = new Rating { Id = 1, PostId = 1, UserId = 2, Value = RatingValue.Minus };
-            var ratings = new List<Rating>() { rating };
+            var rating = new PostRating { Id = 1, PostId = 1, UserId = 2, Value = RatingValue.Minus };
+            var ratings = new List<PostRating>() { rating };
             var users = new List<User>() { new User { Id = 2, Email = "email" } };
             Setup(users, ratings);
             _mockPostRepository.Setup(repo => repo.FindById(1)).ReturnsAsync(new Post { UserId = 1 });
@@ -85,7 +85,7 @@ namespace TestProject.BL.Test.Services
         public async Task If_current_user_is_author_should_throw_exception()
         {
             var ratingModel = new RatingModel { PostId = 1, Value = RatingButtonPosition.ThumbsUp };
-            var rating = new Rating();
+            var rating = new PostRating();
             var users = new List<User>() { new User { Id = 1, Email = "email" } };
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).
                 Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
@@ -100,7 +100,7 @@ namespace TestProject.BL.Test.Services
         {
             var users = new List<User>() { new User { Id = 1, Email = "email" } };
             var posts = new List<Post>() { new Post { Id = postId } };
-            var ratings = new List<Rating>() { new Rating { PostId = postId, UserId = 1, Value = RatingValue.Plus } };
+            var ratings = new List<PostRating>() { new PostRating { PostId = postId, UserId = 1, Value = RatingValue.Plus } };
             Setup(users, ratings);
             _mockPostRepository.Setup(repo => repo.Get(It.IsAny<Func<Post, bool>>())).
                 Returns((Func<Post, bool> predicate) => posts.Where(predicate).ToList());
@@ -110,12 +110,12 @@ namespace TestProject.BL.Test.Services
             result.Should().BeEquivalentTo(expected);
         }
 
-        private void Setup(List<User> users, List<Rating> ratings)
+        private void Setup(List<User> users, List<PostRating> ratings)
         {
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>())).
                 Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
-            _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<Rating, bool>>())).
-                Returns((Func<Rating, bool> predicate) => ratings.Where(predicate).ToList());
+            _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<PostRating, bool>>())).
+                Returns((Func<PostRating, bool> predicate) => ratings.Where(predicate).ToList());
         }
 
         public static IEnumerable<object[]> RatingData =>

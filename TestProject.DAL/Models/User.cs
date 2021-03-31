@@ -8,6 +8,7 @@ namespace TestProject.DAL.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public List<Rating> Ratings { get; set; }
+        public List<PostRating> PostRatings { get; set; }
+        public List<Comment> Comments { get; set; }
     }
 }

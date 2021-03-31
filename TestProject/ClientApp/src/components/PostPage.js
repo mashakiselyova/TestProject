@@ -2,10 +2,10 @@
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import Rating from "./Rating";
-import getRating from '../services/RatingService';
+import { getRating } from '../services/RatingService';
 
 function PostPage({ postId, userProfile }) {
-    const [post, setPost] = useState(undefined);
+    const [post, setPost] = useState();
 
     useEffect(() => {
         fetch(`posts/getRichPost/${postId}`, { mode: 'no-cors' })

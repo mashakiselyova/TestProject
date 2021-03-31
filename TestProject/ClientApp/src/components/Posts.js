@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import Post from './Post';
-import getRating from '../services/RatingService'; 
+import { getRating } from '../services/RatingService'; 
 
 function Posts({ userProfile, filterByCurrentUser = false }) {
     const [posts, setPosts] = useState([]);

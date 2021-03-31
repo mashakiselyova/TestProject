@@ -16,12 +16,12 @@ namespace TestProject.BL.Services
     public class UserService : IUserService
     {
         private IRepository<User> _userRepository;
-        private IRepository<Rating> _ratingRepository;
+        private IRepository<PostRating> _ratingRepository;
         private IMapper<UserLoginModel, User> _userLoginMapper;
         private IMapper<UserProfile, User> _userProfileMapper;
 
         public UserService(IRepository<User> repository,
-            IRepository<Rating> ratingRepository,
+            IRepository<PostRating> ratingRepository,
             IMapper<UserLoginModel, User> userLoginMapper,
             IMapper<UserProfile, User> userProfileMapper)
         {

@@ -4,9 +4,9 @@ using TestProject.Enums;
 
 namespace TestProject.BL.Mappers
 {
-    public class RatingMapper : IMapper<RatingModel, Rating>
+    public class RatingMapper : IMapper<RatingModel, PostRating>
     {
-        public RatingModel ToBlModel(Rating rating)
+        public RatingModel ToBlModel(PostRating rating)
         {
             return new RatingModel
             {
@@ -15,9 +15,9 @@ namespace TestProject.BL.Mappers
             };
         }
 
-        public Rating ToDalModel(RatingModel rating)
+        public PostRating ToDalModel(RatingModel rating)
         {
-            return new Rating
+            return new PostRating
             {
                 Value = (RatingValue)rating.Value,
                 PostId = rating.PostId

@@ -172,21 +172,21 @@ namespace TestProject.BL.Test.Services
                     null,
                     new List<PostModel>
                     {
-                        new PostModel() { Ratings = new List<Rating>() { new Rating() { UserId = 2 } } },
-                        new PostModel() { Ratings = new List<Rating>() { new Rating() { UserId = 2 } } }
+                        new PostModel() { Ratings = new List<PostRating>() { new PostRating() { UserId = 2 } } },
+                        new PostModel() { Ratings = new List<PostRating>() { new PostRating() { UserId = 2 } } }
                     },
-                    new Post() { Ratings = new List<Rating>() { new Rating() { UserId = 2} } },
-                    new PostModel() { Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
+                    new Post() { Ratings = new List<PostRating>() { new PostRating() { UserId = 2} } },
+                    new PostModel() { Ratings = new List<PostRating>() { new PostRating() { UserId = 2} } }
                 },
                 new object[]
                 {
                     1,
                     new List<PostModel>
                     {
-                        new PostModel { Author = new Author { Id = 1 } , Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
+                        new PostModel { Author = new Author { Id = 1 } , Ratings = new List<PostRating>() { new PostRating() { UserId = 2} } }
                     },
-                    new Post() { User = new User { Id = 1 }, Ratings = new List<Rating>() { new Rating() { UserId = 2 } } },
-                    new PostModel { Author = new Author { Id = 1 }, Ratings = new List<Rating>() { new Rating() { UserId = 2} } }
+                    new Post() { User = new User { Id = 1 }, Ratings = new List<PostRating>() { new PostRating() { UserId = 2 } } },
+                    new PostModel { Author = new Author { Id = 1 }, Ratings = new List<PostRating>() { new PostRating() { UserId = 2} } }
                 }
             };
 
@@ -209,7 +209,7 @@ namespace TestProject.BL.Test.Services
                         Content = "content",
                         UserId = 1,
                         User = new User{ Id = 1 },
-                        Ratings = new List<Rating> { new Rating
+                        Ratings = new List<PostRating> { new PostRating
                         {
                             PostId=1,
                             UserId=2,

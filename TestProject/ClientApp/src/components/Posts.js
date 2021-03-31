@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
-import Post from './Post'
+import Post from './Post';
+import { getRating } from '../services/RatingService'; 
 
 function Posts({ userProfile, filterByCurrentUser = false }) {
     const [posts, setPosts] = useState([]);
@@ -20,20 +21,18 @@ function Posts({ userProfile, filterByCurrentUser = false }) {
             });
     }, [userProfile, filterByCurrentUser])
 
-    function handleUpdateRating(postId) {
-        fetch(`/rating/get/${postId}`, { method: 'get' })
-            .then((response) => {                
-                response.json().then((data) => {
-                    let newPosts = [...posts];
-                    const index = newPosts.map(p => p.id).indexOf(postId);
-                    newPosts[index].totalRating = data.totalRating;
-                    newPosts[index].selectedRating = data.ratingByCurrentUser;
-                    setPosts(newPosts);
-                });
-            })
-            .catch(() => {
-                NotificationManager.error("Couldn't get rating");
-            });
+    async function updateRating(postId) {
+        try {
+            const rating = await getRating(postId);
+            let newPosts = [...posts];
+            const index = newPosts.map(p => p.id).indexOf(postId);
+            newPosts[index].totalRating = rating.totalRating;
+            newPosts[index].selectedRating = rating.ratingByCurrentUser;
+            setPosts(newPosts);
+        }
+        catch {
+            NotificationManager.error("Couldn't update rating");
+        }        
     }
 
     return (
@@ -43,7 +42,7 @@ function Posts({ userProfile, filterByCurrentUser = false }) {
                     key={post.id}
                     post={post}
                     userProfile={userProfile}
-                    updateRating={handleUpdateRating} />
+                    updateRating={updateRating} />
             ))}
             <NotificationContainer />
         </div>

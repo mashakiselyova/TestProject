@@ -4,6 +4,7 @@ import Main from "./Main"
 import UserProfile from "./UserProfile"
 import Header from "./Header";
 import PostForm from "./PostForm";
+import PostPage from "./PostPage";
 
 function Layout() {
     const [userProfile, setUserProfile] = useState({
@@ -32,9 +33,12 @@ function Layout() {
         <div>
             <Route exact path="/" render={() => <Main userProfile={userProfile} />} />
             <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
-            <Route exact path="/posts/create" render={() => <PostForm userId={userProfile.id}/>} />
+            <Route exact path="/posts/create" render={() => <PostForm userId={userProfile.id} />} />
             <Route path="/posts/edit/:id" render={(props) => <PostForm postId={props.match.params.id} editing={true} />} />
-        </div>        
+            <Route path="/posts/post/:id" render={(props) => <PostPage
+                postId={props.match.params.id}
+                userProfile={userProfile} />} />
+        </div>
     </div>;
 }
 

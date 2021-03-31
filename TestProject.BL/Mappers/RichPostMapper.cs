@@ -1,32 +1,31 @@
-﻿using TestProject.DAL.Models;
-using TestProject.BL.Models;
+﻿using TestProject.BL.Models;
+using TestProject.DAL.Models;
 
 namespace TestProject.BL.Mappers
 {
-    public class PostMapper : IMapper<PostModel, Post>
+    public class RichPostMapper : IMapper<RichPostModel, Post>
     {
         private IMapper<Author, User> _userAuthorMapper;
 
-        public PostMapper(IMapper<Author, User> userAuthorMapper)
+        public RichPostMapper(IMapper<Author, User> userAuthorMapper)
         {
             _userAuthorMapper = userAuthorMapper;
         }
 
-        public PostModel ToBlModel(Post post)
+        public RichPostModel ToBlModel(Post post)
         {
-            return new PostModel
+            return new RichPostModel
             {
                 Id = post.Id,
                 Title = post.Title,
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = _userAuthorMapper.ToBlModel(post.User),
-                Ratings = post.Ratings
+                Author = _userAuthorMapper.ToBlModel(post.User)
             };
         }
 
-        public Post ToDalModel(PostModel post)
+        public Post ToDalModel(RichPostModel post)
         {
             return new Post
             {

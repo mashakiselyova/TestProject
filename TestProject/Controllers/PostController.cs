@@ -18,14 +18,17 @@ namespace TestProject.Controllers
         private IPostService _postService;
         private IMapper<EditPostModel, BL.Models.EditPostModel> _editPostMapper;
         private IMapper<PostDisplayModel, BL.Models.PostModel> _displayPostMapper;
+        private IMapper<RichPostDisplayModel, BL.Models.RichPostModel> _richPostDisplayMapper;
 
         public PostController(IPostService postService, 
             IMapper<EditPostModel, BL.Models.EditPostModel> editPostMapper,
-            IMapper<PostDisplayModel, BL.Models.PostModel> displayPostMapper)
+            IMapper<PostDisplayModel, BL.Models.PostModel> displayPostMapper,
+            IMapper<RichPostDisplayModel, BL.Models.RichPostModel> richPostMapper)
         {
             _postService = postService;
             _editPostMapper = editPostMapper;
             _displayPostMapper = displayPostMapper;
+            _richPostDisplayMapper = richPostMapper;
         }
 
         [Route("getAll/{userId?}")]
@@ -86,6 +89,13 @@ namespace TestProject.Controllers
         {
             await _postService.Delete(id);
             return Ok();
+        }
+
+        [Route("/posts/getRichPost/{id}")]
+        public RichPostDisplayModel GetRichPost([FromRoute] int id)
+        {
+            var userEmail = User.Identity.IsAuthenticated ? User.GetEmail() : null;
+            return _richPostDisplayMapper.ToWebModel(_postService.GetRichPost(id, userEmail));
         }
     }
 }

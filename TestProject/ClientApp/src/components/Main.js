@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import Posts from './Posts';
 
-function Main({ userProfile }) {
+function Main({ userProfile}) {
     return (
         <div className="row">
             <div className="col-2">

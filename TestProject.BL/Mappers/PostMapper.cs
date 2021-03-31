@@ -5,6 +5,13 @@ namespace TestProject.BL.Mappers
 {
     public class PostMapper : IMapper<PostModel, Post>
     {
+        private IMapper<Author, User> _userAuthorMapper;
+
+        public PostMapper(IMapper<Author, User> userAuthorMapper)
+        {
+            _userAuthorMapper = userAuthorMapper;
+        }
+
         public PostModel ToBlModel(Post post)
         {
             return new PostModel
@@ -14,13 +21,7 @@ namespace TestProject.BL.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = new Author
-                {
-                    Id = post.User.Id,
-                    FirstName = post.User.FirstName,
-                    LastName = post.User.LastName,
-                    Email = post.User.Email
-                },
+                Author = _userAuthorMapper.ToBlModel(post.User),
                 Ratings = post.Ratings
             };
         }
@@ -34,13 +35,7 @@ namespace TestProject.BL.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                User = new User
-                {
-                    Id = post.Author.Id,
-                    FirstName = post.Author.FirstName,
-                    LastName = post.Author.LastName,
-                    Email = post.Author.Email
-                }
+                User = _userAuthorMapper.ToDalModel(post.Author)
             };
         }
     }

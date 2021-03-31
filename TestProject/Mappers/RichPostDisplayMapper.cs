@@ -5,6 +5,13 @@ namespace TestProject.Mappers
 {
     public class RichPostDisplayMapper : IMapper<RichPostDisplayModel, RichPostModel>
     {
+        private IMapper<Models.Author, BL.Models.Author> _authorMapper;
+
+        public RichPostDisplayMapper(IMapper<Models.Author, BL.Models.Author> authorMapper)
+        {
+            _authorMapper = authorMapper;
+        }
+
         public RichPostModel ToBlModel(RichPostDisplayModel post)
         {
             return new RichPostModel
@@ -14,13 +21,7 @@ namespace TestProject.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = new BL.Models.Author
-                {
-                    Id = post.Author.Id,
-                    FirstName = post.Author.FirstName,
-                    LastName = post.Author.LastName,
-                    Email = post.Author.Email
-                },
+                Author = _authorMapper.ToBlModel(post.Author),
                 TotalRating = post.TotalRating,
                 SelectedRating = post.SelectedRating
             };
@@ -35,13 +36,7 @@ namespace TestProject.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = new Models.Author
-                {
-                    Id = post.Author.Id,
-                    FirstName = post.Author.FirstName,
-                    LastName = post.Author.LastName,
-                    Email = post.Author.Email
-                },
+                Author = _authorMapper.ToWebModel(post.Author),
                 TotalRating = post.TotalRating,
                 SelectedRating = post.SelectedRating
             };

@@ -1,8 +1,9 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
-import Post from './Post'
+import Post from './Post';
+import getRating from '../services/RatingService'; 
 
-function Posts({ userProfile, filterByCurrentUser = false, getUpdatedRating }) {
+function Posts({ userProfile, filterByCurrentUser = false }) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
@@ -20,13 +21,18 @@ function Posts({ userProfile, filterByCurrentUser = false, getUpdatedRating }) {
             });
     }, [userProfile, filterByCurrentUser])
 
-    async function handleUpdateRating(postId) {
-        const rating = await getUpdatedRating(postId);
-        let newPosts = [...posts];
-        const index = newPosts.map(p => p.id).indexOf(postId);
-        newPosts[index].totalRating = rating.totalRating;
-        newPosts[index].selectedRating = rating.ratingByCurrentUser;
-        setPosts(newPosts);
+    async function updateRating(postId) {
+        try {
+            const rating = await getRating(postId);
+            let newPosts = [...posts];
+            const index = newPosts.map(p => p.id).indexOf(postId);
+            newPosts[index].totalRating = rating.totalRating;
+            newPosts[index].selectedRating = rating.ratingByCurrentUser;
+            setPosts(newPosts);
+        }
+        catch {
+            NotificationManager.error("Couldn't update rating");
+        }        
     }
 
     return (
@@ -36,7 +42,7 @@ function Posts({ userProfile, filterByCurrentUser = false, getUpdatedRating }) {
                     key={post.id}
                     post={post}
                     userProfile={userProfile}
-                    updateRating={handleUpdateRating} />
+                    updateRating={updateRating} />
             ))}
             <NotificationContainer />
         </div>

@@ -90,8 +90,8 @@ namespace TestProject.Controllers
         [Route("/posts/getRichPost/{id}")]
         public RichPostDisplayModel GetRichPost([FromRoute] int id)
         {
-            return _richPostDisplayMapper.ToWebModel(_postService.GetRichPost(id, 
-                User.Identity.IsAuthenticated ? User.GetEmail() : null));
+            var userEmail = User.Identity.IsAuthenticated ? User.GetEmail() : null;
+            return _richPostDisplayMapper.ToWebModel(_postService.GetRichPost(id, userEmail));
         }
     }
 }

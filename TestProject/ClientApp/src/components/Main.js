@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import Posts from './Posts';
 
-function Main({ userProfile, getUpdatedRating }) {
+function Main({ userProfile}) {
     return (
         <div className="row">
             <div className="col-2">
@@ -11,7 +11,7 @@ function Main({ userProfile, getUpdatedRating }) {
                     : <p>You need to sign in to create new posts</p>}
             </div>
             <div className="col-8">
-                <Posts userProfile={userProfile} getUpdatedRating={getUpdatedRating} />
+                <Posts userProfile={userProfile} />
             </div>
         </div>
     );

@@ -5,6 +5,13 @@ namespace TestProject.BL.Mappers
 {
     public class RichPostMapper : IMapper<RichPostModel, Post>
     {
+        private IMapper<Author, User> _userAuthorMapper;
+
+        public RichPostMapper(IMapper<Author, User> userAuthorMapper)
+        {
+            _userAuthorMapper = userAuthorMapper;
+        }
+
         public RichPostModel ToBlModel(Post post)
         {
             return new RichPostModel
@@ -14,13 +21,7 @@ namespace TestProject.BL.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = new Author
-                {
-                    Id = post.User.Id,
-                    FirstName = post.User.FirstName,
-                    LastName = post.User.LastName,
-                    Email = post.User.Email
-                }
+                Author = _userAuthorMapper.ToBlModel(post.User)
             };
         }
 
@@ -33,13 +34,7 @@ namespace TestProject.BL.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                User = new User
-                {
-                    Id = post.Author.Id,
-                    FirstName = post.Author.FirstName,
-                    LastName = post.Author.LastName,
-                    Email = post.Author.Email
-                }
+                User = _userAuthorMapper.ToDalModel(post.Author)
             };
         }
     }

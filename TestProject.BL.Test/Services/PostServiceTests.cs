@@ -150,7 +150,7 @@ namespace TestProject.BL.Test.Services
         }
 
         [Fact]
-        public void If_rich_post_does_not_exist_should_throw_exception()
+        public void Should_throw_exception_when_requesting_rich_post_that_does_not_exist()
         {
             var posts = new List<Post>();
             _mockPostRepository.Setup(repo => repo.Get(It.IsAny<Func<Post, bool>>()))

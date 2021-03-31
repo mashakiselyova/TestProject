@@ -1,7 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { Route } from 'react-router';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
-import 'react-notifications/lib/notifications.css';
 import Main from "./Main"
 import UserProfile from "./UserProfile"
 import Header from "./Header";
@@ -30,30 +28,28 @@ function Layout() {
             });
     }, [])
 
-    async function handleGetUpdatedRating(postId) {
-        try {
-            const response = await fetch(`/rating/get/${postId}`);
-            const rating = await response.json();
-            return rating;
-        }
-        catch {
-            NotificationManager.error("Couldn't get rating");
-        }        
-    }
+    //async function handleGetUpdatedRating(postId) {
+    //    try {
+    //        const response = await fetch(`/rating/get/${postId}`);
+    //        const rating = await response.json();
+    //        return rating;
+    //    }
+    //    catch {
+    //        NotificationManager.error("Couldn't get rating");
+    //    }        
+    //}
 
     return <div>
         <Header userProfile={userProfile} />
         <div>
-            <Route exact path="/" render={() => <Main userProfile={userProfile} getUpdatedRating={handleGetUpdatedRating} />} />
+            <Route exact path="/" render={() => <Main userProfile={userProfile} />} />
             <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
             <Route exact path="/posts/create" render={() => <PostForm userId={userProfile.id} />} />
             <Route path="/posts/edit/:id" render={(props) => <PostForm postId={props.match.params.id} editing={true} />} />
             <Route path="/posts/post/:id" render={(props) => <PostPage
                 postId={props.match.params.id}
-                userProfile={userProfile}
-                getUpdatedRating={handleGetUpdatedRating} />} />
+                userProfile={userProfile} />} />
         </div>
-        <NotificationContainer />
     </div>;
 }
 

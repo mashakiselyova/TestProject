@@ -5,6 +5,13 @@ namespace TestProject.Mappers
 {
     public class DisplayPostMapper : IMapper<PostDisplayModel, PostModel>
     {
+        private IMapper<Models.Author, BL.Models.Author> _authorMapper;
+
+        public DisplayPostMapper(IMapper<Models.Author, BL.Models.Author> authorMapper)
+        {
+            _authorMapper = authorMapper;
+        }
+
         public PostDisplayModel ToWebModel(PostModel post)
         {
             return new PostDisplayModel
@@ -14,13 +21,7 @@ namespace TestProject.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = new Models.Author
-                {
-                    Id = post.Author.Id,
-                    FirstName = post.Author.FirstName,
-                    LastName = post.Author.LastName,
-                    Email = post.Author.Email
-                },
+                Author = _authorMapper.ToWebModel(post.Author),
                 SelectedRating = post.SelectedRating,
                 TotalRating = post.TotalRating
             };
@@ -35,13 +36,7 @@ namespace TestProject.Mappers
                 Content = post.Content,
                 CreateDate = post.CreateDate,
                 UpdateDate = post.UpdateDate,
-                Author = new BL.Models.Author
-                {
-                    Id = post.Author.Id,
-                    FirstName = post.Author.FirstName,
-                    LastName = post.Author.LastName,
-                    Email = post.Author.Email
-                },
+                Author = _authorMapper.ToBlModel(post.Author),
                 SelectedRating = post.SelectedRating,
                 TotalRating = post.TotalRating
             };

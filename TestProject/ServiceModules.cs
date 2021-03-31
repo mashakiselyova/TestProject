@@ -55,6 +55,8 @@ namespace TestProject
             builder.RegisterType<UpdateRatingMapper>().As<Mappers.IMapper<Models.UpdateRatingModel, BL.Models.UpdateRatingModel>>();
             builder.RegisterType<RichPostDisplayMapper>().As<Mappers.IMapper<RichPostDisplayModel, RichPostModel>>();
             builder.RegisterType<RichPostMapper>().As<BL.Mappers.IMapper<RichPostModel, Post>>();
+            builder.RegisterType<UserAuthorMapper>().As<BL.Mappers.IMapper<BL.Models.Author, User>>();
+            builder.RegisterType<AuthorMapper>().As<Mappers.IMapper<Models.Author, BL.Models.Author>>();
         }
 
         private void RegisterContext(ContainerBuilder builder)

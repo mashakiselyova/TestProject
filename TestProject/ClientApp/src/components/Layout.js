@@ -28,17 +28,6 @@ function Layout() {
             });
     }, [])
 
-    //async function handleGetUpdatedRating(postId) {
-    //    try {
-    //        const response = await fetch(`/rating/get/${postId}`);
-    //        const rating = await response.json();
-    //        return rating;
-    //    }
-    //    catch {
-    //        NotificationManager.error("Couldn't get rating");
-    //    }        
-    //}
-
     return <div>
         <Header userProfile={userProfile} />
         <div>

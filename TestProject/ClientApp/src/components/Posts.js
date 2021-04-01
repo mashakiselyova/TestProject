@@ -3,11 +3,11 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import Post from './Post';
 import { getRating } from '../services/RatingService'; 
 
-function Posts({ userProfile, filterByCurrentUser = false }) {
+function Posts({ currentUser, authorId }) {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        const url = `/posts/getAll/${filterByCurrentUser ? userProfile.id : ''}`;
+        const url = `/posts/getAll/${authorId ? authorId : ''}`;
         fetch(url, { method: 'get', mode: 'no-cors' })
             .then((response) => {
                 response.json().then((data) => {
@@ -19,7 +19,7 @@ function Posts({ userProfile, filterByCurrentUser = false }) {
             }).catch(() => {
                 NotificationManager.error("Couldn't get posts");
             });
-    }, [userProfile, filterByCurrentUser])
+    }, [currentUser, authorId])
 
     async function updateRating(postId) {
         try {
@@ -41,7 +41,7 @@ function Posts({ userProfile, filterByCurrentUser = false }) {
                 <Post
                     key={post.id}
                     post={post}
-                    userProfile={userProfile}
+                    currentUser={currentUser}
                     updateRating={updateRating} />
             ))}
             <NotificationContainer />

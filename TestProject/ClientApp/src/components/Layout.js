@@ -7,37 +7,40 @@ import PostForm from "./PostForm";
 import PostPage from "./PostPage";
 
 function Layout() {
-    const [userProfile, setUserProfile] = useState({
+    const [currentUser, setCurrentUser] = useState({
         name: undefined, email: undefined, id: undefined, loggedIn: undefined
     });
 
     useEffect(() => {
-        fetch("/user/getUserProfile", { mode: 'no-cors' })
+        fetch("/user/getCurrentUser", { mode: 'no-cors' })
             .then((response) => {
                 if (response.ok) {
                     response.json().then((data) => {
-                        setUserProfile({ ...data, loggedIn: true });
+                        setCurrentUser({ ...data, loggedIn: true });
                     });
                 }
                 else {
-                    setUserProfile({ loggedIn: false });
+                    setCurrentUser({ loggedIn: false });
                 }
             })
             .catch(() => {
-                setUserProfile({ loggedIn: false });
+                setCurrentUser({ loggedIn: false });
             });
     }, [])
 
     return <div>
-        <Header userProfile={userProfile} />
+        <Header userProfile={currentUser} />
         <div>
-            <Route exact path="/" render={() => <Main userProfile={userProfile} />} />
-            <Route path="/account/profile" render={() => <UserProfile userProfile={userProfile} />} />
-            <Route exact path="/posts/create" render={() => <PostForm userId={userProfile.id} />} />
+            <Route exact path="/" render={() => <Main currentUser={currentUser} />} />
+            <Route path="/account/profile" render={() => <UserProfile currentUser={currentUser} userId={currentUser.id} />} />
+            <Route exact path="/posts/create" render={() => <PostForm userId={currentUser.id} />} />
             <Route path="/posts/edit/:id" render={(props) => <PostForm postId={props.match.params.id} editing={true} />} />
             <Route path="/posts/post/:id" render={(props) => <PostPage
                 postId={props.match.params.id}
-                userProfile={userProfile} />} />
+                currentUser={currentUser} />} />
+            <Route path="/user/profile/:id" render={(props) => <UserProfile
+                currentUser={currentUser}
+                userId={props.match.params.id} />} />
         </div>
     </div>;
 }

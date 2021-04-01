@@ -65,17 +65,48 @@ namespace TestProject.BL.Test.Services
 
         [Theory]
         [MemberData(nameof(GetProfileData))]
-        public void Should_get_user_profile(string email, UserProfile expected)
+        public void Should_get_current_user_profile(string email, UserProfile expected)
         {
-            var user = new User { Email = email };
+            var user = new User { Id = 1, Email = email };
             var users = new List<User>() { user };
-            var rating = new PostRating() { Value = RatingValue.Plus };
+            var rating = new PostRating() { Value = RatingValue.Plus, Post = new Post { UserId = 1 } };
+            var ratings = new List<PostRating> { rating };
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
                 .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
-            _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<PostRating, bool>>())).Returns(new List<PostRating> { rating });
-            _mockUserProfileMapper.Setup(mapper => mapper.ToBlModel(user)).Returns(new UserProfile { Email = email });
+            _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<PostRating, bool>>()))
+                .Returns((Func<PostRating, bool> predicate) => ratings.Where(predicate).ToList());
+            _mockUserProfileMapper.Setup(mapper => mapper.ToBlModel(user)).Returns(new UserProfile { Id = 1, Email = email });
 
-            var result = _userService.GetProfile(email);
+            var result = _userService.GetByEmail(email);
+
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void If_current_user_is_not_found_should_throw_exception()
+        {
+            var users = new List<User>();
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
+
+            Assert.Throws<UserNotFoundException>(() => _userService.GetByEmail("email"));
+        }
+
+        [Theory]
+        [MemberData(nameof(GetUser))]
+        public void Should_get__user_profile(int userId, UserProfile expected)
+        {
+            var user = new User { Id = userId };
+            var users = new List<User>() { user };
+            var rating = new PostRating() { Value = RatingValue.Plus, Post = new Post { UserId = 1 } };
+            var ratings = new List<PostRating> { rating };
+            _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
+                .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
+            _mockRatingRepository.Setup(repo => repo.Get(It.IsAny<Func<PostRating, bool>>()))
+                .Returns((Func<PostRating, bool> predicate) => ratings.Where(predicate).ToList());
+            _mockUserProfileMapper.Setup(mapper => mapper.ToBlModel(user)).Returns(new UserProfile { Id = userId });
+
+            var result = _userService.Get(userId);
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -87,13 +118,19 @@ namespace TestProject.BL.Test.Services
             _mockUserRepository.Setup(repo => repo.Get(It.IsAny<Func<User, bool>>()))
                 .Returns((Func<User, bool> predicate) => users.Where(predicate).ToList());
 
-            Assert.Throws<UserNotFoundException>(() => _userService.GetProfile("email"));
+            Assert.Throws<UserNotFoundException>(() => _userService.Get(1));
         }
 
         public static IEnumerable<object[]> GetProfileData =>
             new List<object[]>
             {
-                new object[] { "bla@bla.com", new UserProfile { Email = "bla@bla.com", Rating = 1 } }
+                new object[] { "bla@bla.com", new UserProfile { Id = 1, Email = "bla@bla.com", Rating = 1 } }
+            };
+
+        public static IEnumerable<object[]> GetUser =>
+            new List<object[]>
+            {
+                new object[] { 1, new UserProfile { Id = 1, Rating = 1 } }
             };
     }
 }

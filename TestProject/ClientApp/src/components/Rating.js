@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
 import { PLUS, MINUS } from "../ratingValues"
 
-function Rating({ postId, userProfile, authorId, selectedRating, totalRating, updateRating }) {
+function Rating({ postId, currentUser, authorId, selectedRating, totalRating, updateRating }) {
 
     async function handleSetRating(value) {
         await fetch("/rating/set", {
@@ -25,7 +25,7 @@ function Rating({ postId, userProfile, authorId, selectedRating, totalRating, up
 
     const thumbsUpStyles = { cursor: "pointer", marginBottom: 5, color: selectedRating === PLUS ? "red" : "black" };
     const thumbsDownStyles = { cursor: "pointer", color: selectedRating === MINUS ? "red" : "black" };
-    const userIsNotAuthor = userProfile.loggedIn && userProfile.id !== authorId;
+    const userIsNotAuthor = currentUser.loggedIn && currentUser.id !== authorId;
 
     return (
         <div>

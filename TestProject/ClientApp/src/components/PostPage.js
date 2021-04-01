@@ -2,26 +2,14 @@
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import Rating from "./Rating";
+import CommentInput from "./CommentInput";
 import { getRating } from '../services/RatingService';
 
 function PostPage({ postId, userProfile }) {
     const [post, setPost] = useState();
 
     useEffect(() => {
-        fetch(`posts/getRichPost/${postId}`, { mode: 'no-cors' })
-            .then((response) => {
-                if (response.ok) {
-                    response.json().then((data) => {
-                        setPost(data);
-                    });
-                }
-                else {
-                    NotificationManager.error("Couldn't load post");
-                }
-            })
-            .catch(() => {
-                NotificationManager.error("Couldn't load post");
-            });
+        loadPost();
     }, [])
 
     async function updateRating() {
@@ -37,10 +25,28 @@ function PostPage({ postId, userProfile }) {
         }
     }
 
+    function loadPost() {
+        fetch(`posts/getRichPost/${postId}`, { mode: 'no-cors' })
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then((data) => {
+                        setPost(data);
+                    });
+                }
+                else {
+                    NotificationManager.error("Couldn't load post");
+                }
+            })
+            .catch(() => {
+                NotificationManager.error("Couldn't load post");
+            });
+    }
+
     return (
         <div className="row">
             {post &&
-                <div className="card col-8 offset-2">
+                <div className="col-8 offset-2">
+                <div className="card">
                     <h5 className="card-header">{post.author.firstName + ' ' + post.author.lastName}</h5>
                     <div className="card-body row">
                         <div className="col-1">
@@ -61,6 +67,11 @@ function PostPage({ postId, userProfile }) {
                             <p className="card-text">{post.content}</p>
                         </div>
                     </div>
+                </div>
+                {userProfile.loggedIn
+                    ? <CommentInput postId={post.id} updatePost={loadPost} />
+                    : <div className="card">You need to sign in to leave comments</div>
+                }                
                 </div>}
             <NotificationContainer />
         </div>

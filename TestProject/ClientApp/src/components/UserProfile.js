@@ -4,16 +4,10 @@ import 'react-notifications/lib/notifications.css';
 import Posts from './Posts';
 
 function UserProfile({ currentUser, userId }) {
-    const [profile, setProfile] = useState(currentUser);
+    const [profile, setProfile] = useState();
 
     useEffect(() => {
-        if (userId) {
-            getUser(userId);
-        }        
-    }, [userId])
-
-    function getUser(id) {
-        fetch(`user/get/${id}`, { mode: 'no-cors' })
+        fetch(`user/get/${userId}`, { mode: 'no-cors' })
             .then((response) => {
                 if (response.ok) {
                     response.json().then((data) => {
@@ -26,8 +20,8 @@ function UserProfile({ currentUser, userId }) {
             })
             .catch(() => {
                 NotificationManager.error("Couldn't get profile");
-            });
-    }
+            });   
+    }, [userId])
 
     return (<div>
         {profile &&
@@ -38,7 +32,7 @@ function UserProfile({ currentUser, userId }) {
                     <div>Rating: {profile.rating}</div>
                 </div>
                 {profile.id
-                && <Posts currentUser={currentUser} filterByUser={true} authorId={userId ? userId : currentUser.id} />}
+                && <Posts currentUser={currentUser} authorId={userId ? userId : currentUser.id} />}
             </div>}
         <NotificationContainer />
     </div>);

@@ -57,7 +57,7 @@ namespace TestProject.BL.Services
             try
             {
                 var user = _userRepository.GetByEmail(email);
-                return GetUserProfile(user);
+                return RetrieveProfile(user);
             }
             catch (InvalidOperationException)
             {
@@ -77,10 +77,10 @@ namespace TestProject.BL.Services
             {
                 throw new UserNotFoundException();
             }
-            return GetUserProfile(user);
+            return RetrieveProfile(user);
         }
 
-        private UserProfile GetUserProfile(User user)
+        private UserProfile RetrieveProfile(User user)
         {
             var userProfile = _userProfileMapper.ToBlModel(user);
             userProfile.Rating = CalculateRating(user.Id);

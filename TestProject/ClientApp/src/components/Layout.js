@@ -32,7 +32,7 @@ function Layout() {
         <Header userProfile={currentUser} />
         <div>
             <Route exact path="/" render={() => <Main currentUser={currentUser} />} />
-            <Route path="/account/profile" render={() => <UserProfile currentUser={currentUser} />} />
+            <Route path="/account/profile" render={() => <UserProfile currentUser={currentUser} userId={currentUser.id} />} />
             <Route exact path="/posts/create" render={() => <PostForm userId={currentUser.id} />} />
             <Route path="/posts/edit/:id" render={(props) => <PostForm postId={props.match.params.id} editing={true} />} />
             <Route path="/posts/post/:id" render={(props) => <PostPage

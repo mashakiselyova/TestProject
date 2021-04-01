@@ -7,6 +7,7 @@ function PostForm({ postId, editing = false }) {
     const [errors, setErrors] = useState({});
 
     const schema = Joi.object({
+        id: Joi.number(),
         title: Joi.string().required(),
         content: Joi.string().required()
     });

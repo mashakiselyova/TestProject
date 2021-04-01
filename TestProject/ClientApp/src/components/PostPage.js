@@ -1,10 +1,11 @@
 ﻿import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import Rating from "./Rating";
 import { getRating } from '../services/RatingService';
 
-function PostPage({ postId, userProfile }) {
+function PostPage({ postId, currentUser }) {
     const [post, setPost] = useState();
 
     useEffect(() => {
@@ -22,7 +23,7 @@ function PostPage({ postId, userProfile }) {
             .catch(() => {
                 NotificationManager.error("Couldn't load post");
             });
-    }, [])
+    }, [postId])
 
     async function updateRating() {
         try {
@@ -41,12 +42,14 @@ function PostPage({ postId, userProfile }) {
         <div className="row">
             {post &&
                 <div className="card col-8 offset-2">
-                    <h5 className="card-header">{post.author.firstName + ' ' + post.author.lastName}</h5>
+                    <Link to={`/user/profile/${post.author.id}`}>
+                        <h5 className="card-header">{post.author.firstName + ' ' + post.author.lastName}</h5>
+                    </Link>
                     <div className="card-body row">
                         <div className="col-1">
                             <Rating
                                 postId={post.id}
-                                userProfile={userProfile}
+                                currentUser={currentUser}
                                 authorId={post.author.id}
                                 selectedRating={post.selectedRating}
                                 totalRating={post.totalRating}

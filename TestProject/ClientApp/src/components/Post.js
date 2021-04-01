@@ -5,7 +5,7 @@ import 'react-notifications/lib/notifications.css';
 import ConfirmDelete from "./ConfirmDelete";
 import Rating from "./Rating";
 
-function Post({ post, userProfile, updateRating }) {
+function Post({ post, currentUser, updateRating }) {
 
     function handleDelete() {
         fetch(`/posts/delete/${post.id}`, {
@@ -24,12 +24,14 @@ function Post({ post, userProfile, updateRating }) {
 
     return (
         <div className="card">
-            <h5 className="card-header">{post.author.firstName + ' ' + post.author.lastName}</h5>
+            <Link to={`/user/profile/${post.author.id}`}>
+                <h5 className="card-header">{post.author.firstName + ' ' + post.author.lastName}</h5>
+            </Link>
             <div className="card-body row">
                 <div className="col-1">
                     <Rating
                         postId={post.id}
-                        userProfile={userProfile}
+                        currentUser={currentUser}
                         authorId={post.author.id}
                         selectedRating={post.selectedRating}
                         totalRating={post.totalRating}
@@ -40,7 +42,7 @@ function Post({ post, userProfile, updateRating }) {
                     <Link to={`/posts/post/${post.id}`}><h5 className="card-title">{post.title}</h5></Link>
                     <h6 className="card-subtitle mb-2 text-muted">{new Date(post.createDate).toLocaleDateString()}</h6>
                     <p className="card-text">{post.content}</p>
-                    {userProfile.loggedIn && userProfile.id === post.author.id
+                    {currentUser.loggedIn && currentUser.id === post.author.id
                         && <div>
                             <Link to={`/posts/edit/${post.id}`} className="btn btn-primary btn-sm m-1">Edit</Link>
                             <button

@@ -48,25 +48,45 @@ namespace TestProject.BL.Services
         }
 
         /// <summary>
-        /// Gets user profile
+        /// Gets current user profile
         /// </summary>
         /// <param name="email">User email</param>
         /// <returns>User profile</returns>
-        public UserProfile GetProfile(string email)
+        public UserProfile GetByEmail(string email)
         {
             try
             {
                 var user = _userRepository.GetByEmail(email);
-                var userProfile = _userProfileMapper.ToBlModel(user);
-                userProfile.Rating = CalculateRating(user.Id);
-                return userProfile;
+                return GetUserProfile(user);
             }
             catch (InvalidOperationException)
             {
                 throw new UserNotFoundException();
             }            
+        }        
+
+        /// <summary>
+        /// Gets user profile
+        /// </summary>
+        /// <param name="id">User Id</param>
+        /// <returns>User Profile</returns>
+        public UserProfile Get(int id)
+        {
+            var user = _userRepository.Get(u => u.Id == id).SingleOrDefault();
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            return GetUserProfile(user);
         }
-        
+
+        private UserProfile GetUserProfile(User user)
+        {
+            var userProfile = _userProfileMapper.ToBlModel(user);
+            userProfile.Rating = CalculateRating(user.Id);
+            return userProfile;
+        }
+
         /// <summary>
         /// Checks if user data has changed
         /// </summary>

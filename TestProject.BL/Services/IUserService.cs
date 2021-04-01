@@ -6,6 +6,7 @@ namespace TestProject.BL.Services
     public interface IUserService
     {
         Task AddOrUpdate(UserLoginModel userLoginModel);
-        UserProfile GetProfile(string email);
+        UserProfile GetByEmail(string email);
+        UserProfile Get(int id);
     }
 }

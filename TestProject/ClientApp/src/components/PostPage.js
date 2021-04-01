@@ -3,12 +3,30 @@ import { Link } from 'react-router-dom';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import Rating from "./Rating";
+import CommentInput from "./CommentInput";
 import { getRating } from '../services/RatingService';
 
 function PostPage({ postId, currentUser }) {
     const [post, setPost] = useState();
 
     useEffect(() => {
+        loadPost();
+    }, [])
+
+    async function updateRating() {
+        try {
+            const rating = await getRating(post.id);
+            let newPost = { ...post };
+            newPost.selectedRating = rating.ratingByCurrentUser;
+            newPost.totalRating = rating.totalRating;
+            setPost(newPost);
+        }
+        catch {
+            NotificationManager.error("Couldn't update rating");
+        }
+    }
+
+    function loadPost() {
         fetch(`posts/getRichPost/${postId}`, { mode: 'no-cors' })
             .then((response) => {
                 if (response.ok) {
@@ -24,19 +42,6 @@ function PostPage({ postId, currentUser }) {
                 NotificationManager.error("Couldn't load post");
             });
     }, [postId])
-
-    async function updateRating() {
-        try {
-            const rating = await getRating(post.id);
-            let newPost = { ...post };
-            newPost.selectedRating = rating.ratingByCurrentUser;
-            newPost.totalRating = rating.totalRating;
-            setPost(newPost);
-        }
-        catch {
-            NotificationManager.error("Couldn't update rating");
-        }
-    }
 
     return (
         <div className="row">
@@ -64,6 +69,11 @@ function PostPage({ postId, currentUser }) {
                             <p className="card-text">{post.content}</p>
                         </div>
                     </div>
+                </div>
+                {userProfile.loggedIn
+                    ? <CommentInput postId={post.id} updatePost={loadPost} />
+                    : <div className="card">You need to sign in to leave comments</div>
+                }                
                 </div>}
             <NotificationContainer />
         </div>

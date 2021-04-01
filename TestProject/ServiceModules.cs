@@ -31,6 +31,7 @@ namespace TestProject
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<PostService>().As<IPostService>();
             builder.RegisterType<RatingService>().As<IRatingService>();
+            builder.RegisterType<CommentService>().As<ICommentService>();
         }
 
         private static void RegisterRepositories(ContainerBuilder builder)
@@ -59,6 +60,8 @@ namespace TestProject
             builder.RegisterType<RichPostMapper>().As<BL.Mappers.IMapper<RichPostModel, Post>>();
             builder.RegisterType<UserAuthorMapper>().As<BL.Mappers.IMapper<BL.Models.Author, User>>();
             builder.RegisterType<AuthorMapper>().As<Mappers.IMapper<Models.Author, BL.Models.Author>>();
+            builder.RegisterType<Mappers.CreateCommentMapper>().As<Mappers.IMapper<Models.CreateCommentModel, BL.Models.CreateCommentModel>>();
+            builder.RegisterType<BL.Mappers.CreateCommentMapper>().As<BL.Mappers.IMapper<BL.Models.CreateCommentModel, Comment>>();
         }
 
         private void RegisterContext(ContainerBuilder builder)
